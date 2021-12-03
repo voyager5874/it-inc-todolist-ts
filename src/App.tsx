@@ -28,6 +28,16 @@ export const App = () => {
     const changeFilter = (filterValue: TaskFilterType) => {
         setFilter(filterValue)
     }
+
+    const changeTaskStatus = (id: string, newStatus: boolean) => {
+        debugger
+        let taskToChange = tasks.find(task => task.id === id)
+        if (taskToChange) {
+            taskToChange.isDone = newStatus
+            setTasks([...tasks])
+        }
+    }
+
     let filteredTasks = tasks;
     if (filter === 'active') {
         filteredTasks = tasks.filter(task => !task.isDone)
@@ -42,18 +52,18 @@ export const App = () => {
         setTasks(tasks.filter(task => task.id !== id))
 
     }
+
     return (
         <div className="App">
             <Todolist title={"What to learn"} tasks={filteredTasks}
                       removeTask={removeTask}
                       changeFilter={changeFilter}
                       addTask={addTask}
+                      changeTaskStatus={changeTaskStatus}
+                      activeFilter={filter}
+
             />
-            <Todolist title={"You're in the beginning"} tasks={tasks2}
-                      removeTask={removeTask}
-                      changeFilter={changeFilter}
-                      addTask={addTask}
-            />
+
         </div>
     );
 }
