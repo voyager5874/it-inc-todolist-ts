@@ -22,3 +22,21 @@
 .is-done {
     opacity: 0.5;
 }
+
+.commonButton {
+    margin: 5px;
+    padding: 3px;
+    cursor: pointer;
+    min-width: 30px;
+    border: 0;
+    border-radius: 5px;
+}
+
+.deleteButton {
+    display: inline-block;
+    background-color: firebrick;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
