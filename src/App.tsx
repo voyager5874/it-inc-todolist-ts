@@ -40,21 +40,14 @@ export const App = () => {
     )
 
     const changeFilter = (todolistID: string, newFilterValue: TaskFilterType) => {
-        const todoListsCopy = [...todolists]
-        const listToChange = todoListsCopy.find(list => list.id === todolistID)
-        if (listToChange) {
-            listToChange.activeFilter = newFilterValue;
-            setTodolists(todoListsCopy)
-        }
+        setTodolists(todolists.map(list => list.id === todolistID ? {...list, activeFilter: newFilterValue} : list))
     }
 
     const changeTaskStatus = (todolistID: string, taskID: string, newStatus: boolean) => {
-        const tasksListCopy = [...tasks[todolistID]]
-        const taskToChange = tasksListCopy.find(task => task.id === taskID) //через map проще наверно, что с производительностью?
-        if (taskToChange) {
-            taskToChange.isDone = newStatus
-            setTasks({...tasks, [todolistID]: tasksListCopy})
-        }
+        setTasks({
+            ...tasks,
+            [todolistID]: tasks[todolistID].map(task => task.id === taskID ? {...task, isDone: newStatus} : task)
+        })
     }
 
     const getFilteredTasks = (todolist: TodolistType) => {
@@ -69,8 +62,7 @@ export const App = () => {
     }
 
     const addTask = (todolistID: string, name: string) => {
-        const newTask: TaskType = {id: v1(), title: name, isDone: false}
-        setTasks({...tasks, [todolistID]: [newTask, ...tasks[todolistID]]}) //вроде это не изменение стейта напрямую - создание нового объекта на месте
+        setTasks({...tasks, [todolistID]: [{id: v1(), title: name, isDone: false}, ...tasks[todolistID]]}) //вроде это не изменение стейта напрямую - создание нового объекта на месте
     }
     const removeTask = (todolistID: string, taskID: string) => {
         setTasks({...tasks, [todolistID]: tasks[todolistID].filter(task => task.id !== taskID)})
@@ -83,8 +75,7 @@ export const App = () => {
         }
     }
     const deleteTodoList = (todolistID: string) => {
-        const todolistsCopy = [...todolists]
-        setTodolists(todolistsCopy.filter(list => list.id !== todolistID))
+        setTodolists(todolists.filter(list => list.id !== todolistID))
     }
 
     return (
