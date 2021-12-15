@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
+import {AddItemForm} from "./AddItemForm";
 
 export type TaskFilterType = 'all' | 'completed' | 'active';
 export type TodolistType = {
@@ -67,9 +68,9 @@ export const App = () => {
     const removeTask = (todolistID: string, taskID: string) => {
         setTasks({...tasks, [todolistID]: tasks[todolistID].filter(task => task.id !== taskID)})
     }
-    const createTodolist = (title: string) => {
-        if (title) {
-            const newTodolist: TodolistType = {id: v1(), title: title, activeFilter: 'all'}
+    const addTodolist = (listName: string) => {
+        if (listName) {
+            const newTodolist: TodolistType = {id: v1(), title: listName, activeFilter: 'all'}
             setTodolists([...todolists, newTodolist])
             setTasks({...tasks, [newTodolist.id]: []})
         }
@@ -80,6 +81,7 @@ export const App = () => {
 
     return (
         <div className="App">
+            <AddItemForm addItemCallback={(listName)=>addTodolist(listName)}/>
             {
                 todolists.map(list => {
                     let taskToShow = getFilteredTasks(list)
@@ -99,7 +101,7 @@ export const App = () => {
                     />
                 })
             }
-            <button onClick={() => createTodolist("New")}>create new todolist</button>
+            {/*<button onClick={() => createTodolist("New")}>create new todolist</button>*/}
         </div>
     );
 }
