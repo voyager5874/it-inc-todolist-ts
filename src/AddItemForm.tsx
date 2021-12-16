@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import s from "./Todolist.module.css";
+import s from "./AddItemForm.module.css";
 
 type addItemFormPropsType = {
     addItemCallback: (itemName: string) => void
 }
 
 export const AddItemForm = (props: addItemFormPropsType) => {
-    const[inputText, setInputText]=useState<string>('')
-    const[inputError, setInputError] = useState<boolean>(false)
+    const [inputText, setInputText] = useState<string>('')
+    const [inputError, setInputError] = useState<boolean>(false)
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputError(false)
@@ -29,7 +29,6 @@ export const AddItemForm = (props: addItemFormPropsType) => {
     }
 
 
-
     return (
         <div>
             <input value={inputText}
@@ -37,7 +36,7 @@ export const AddItemForm = (props: addItemFormPropsType) => {
                    onChange={inputChangeHandler}
                    onKeyPress={keyPressWithinInputHandler}/>
             <button onClick={addItem}>+</button>
-            {inputError && <div className={"error-message"}>Name your task</div>}
+            {inputError && <div className={"error-message"}>give it a name</div>}
         </div>
     );
 };

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import s from './EditableSpan.module.css'
 
 type EditableSpanPropsType = {
     itemName: string
@@ -10,6 +11,7 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
 
     const [editMode, setEditMode] = useState<boolean>(false)
     const [inputText, setInputText] = useState('')
+    const [error, setError] = useState<boolean>(false)
 
     const itemDoubleClickHandler = () => {
         setEditMode(true)
@@ -17,28 +19,36 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
     }
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setError(false)
         setInputText(event.currentTarget.value)
     }
-    const inputBlurHandler = () => {
-        setEditMode(false)
-        props.itemNameChangedCallback(inputText)
-        setInputText(props.itemName)
+
+    const saveNewName = () => {
+        const cleanInputText = inputText.trim()
+        if (cleanInputText) {
+            setEditMode(false)
+            props.itemNameChangedCallback(cleanInputText)
+            setInputText(props.itemName)
+        } else {
+            setInputText('')
+            setError(true)
+        }
+
     }
 
-    const enterKeypressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const enterPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            setEditMode(false)
-            props.itemNameChangedCallback(inputText)
-            setInputText(props.itemName)
+            saveNewName()
         }
     }
 
     return (
         editMode ?
             <input
-                onKeyPress={enterKeypressHandler}
+                className={`${error ? 'error' : ''} ${s.input}`}
+                onKeyPress={enterPressHandler}
                 autoFocus={true}
-                onBlur={inputBlurHandler}
+                onBlur={saveNewName}
                 value={inputText}
                 onChange={inputChangeHandler}
             /> :
