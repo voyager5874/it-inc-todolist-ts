@@ -78,10 +78,16 @@ export const App = () => {
     const deleteTodoList = (todolistID: string) => {
         setTodolists(todolists.filter(list => list.id !== todolistID))
     }
+    const changeTaskName = (todolistID: string, taskID: string, newName: string) => {
+        setTasks({
+            ...tasks,
+            [todolistID]: tasks[todolistID].map(task => task.id === taskID ? {...task, title: newName} : task)
+        })
+    }
 
     return (
         <div className="App">
-            <AddItemForm addItemCallback={(listName)=>addTodolist(listName)}/>
+            <AddItemForm addItemCallback={(listName) => addTodolist(listName)}/>
             {
                 todolists.map(list => {
                     let taskToShow = getFilteredTasks(list)
@@ -95,7 +101,7 @@ export const App = () => {
                         addTask={addTask}
                         changeTaskStatus={changeTaskStatus}
                         activeFilter={list.activeFilter}
-
+                        changeTaskName={changeTaskName}
                         deleteTodoList={deleteTodoList}
 
                     />
