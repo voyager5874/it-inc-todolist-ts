@@ -20,6 +20,7 @@ type TodolistPropsType = {
     changeTaskStatus: (todolistID: string, id: string, newStatus: boolean) => void
     deleteTodoList: (todolistID: string) => void
     changeTaskName: (todolistID: string, taskID: string, newName: string) => void
+    changeListName: (todolistID: string, newName: string) => void
 
 }
 export const Todolist = (props: TodolistPropsType) => {
@@ -43,12 +44,18 @@ export const Todolist = (props: TodolistPropsType) => {
     const changeTaskName = (taskID: string, newName: string) => {
         props.changeTaskName(props.todolistID, taskID, newName)
     }
+    const changeListName = (newName: string) => {
+        props.changeListName(props.todolistID, newName)
+
+    }
 
 
     return (
         <div className={s.todolistWrapper}>
-            <h3>{props.title}</h3>
-            <button className={`commonButton deleteButton`} onClick={deleteTodolistHandler}>X</button>
+            <h3>
+                <EditableSpan itemName={props.title} itemNameChangedCallback={(newName) => changeListName(newName)}/>
+                <button className={`commonButton deleteButton`} onClick={deleteTodolistHandler}>X</button>
+            </h3>
             <AddItemForm addItemCallback={(taskName) => addTask(taskName)}/>
             <ul>
                 {

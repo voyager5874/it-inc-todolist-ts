@@ -84,6 +84,9 @@ export const App = () => {
             [todolistID]: tasks[todolistID].map(task => task.id === taskID ? {...task, title: newName} : task)
         })
     }
+    const changeListName = (todolistID: string, newName: string) => {
+        setTodolists(todolists.map(list => list.id === todolistID ? {...list, title: newName} : list))
+    }
 
     return (
         <div className="App">
@@ -102,6 +105,7 @@ export const App = () => {
                         changeTaskStatus={changeTaskStatus}
                         activeFilter={list.activeFilter}
                         changeTaskName={changeTaskName}
+                        changeListName={changeListName}
                         deleteTodoList={deleteTodoList}
 
                     />
