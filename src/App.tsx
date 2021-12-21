@@ -3,6 +3,7 @@ import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
+import {Paper} from "@material-ui/core";
 
 export type TaskFilterType = 'all' | 'completed' | 'active';
 export type TodolistType = {
@@ -90,25 +91,30 @@ export const App = () => {
 
     return (
         <div className="App">
+
             <AddItemForm addItemCallback={(listName) => addTodolist(listName)}/>
             {
                 todolists.map(list => {
                     let taskToShow = getFilteredTasks(list)
-                    return <Todolist
-                        key={list.id}
-                        todolistID={list.id}
-                        title={list.title}
-                        tasks={taskToShow}
-                        removeTask={removeTask}
-                        changeFilter={changeFilter}
-                        addTask={addTask}
-                        changeTaskStatus={changeTaskStatus}
-                        activeFilter={list.activeFilter}
-                        changeTaskName={changeTaskName}
-                        changeListName={changeListName}
-                        deleteTodoList={deleteTodoList}
+                    return (
+                        <Paper key={list.id} style={{padding: "20px"}} elevation={10}>
+                            <Todolist
+                                todolistID={list.id}
+                                title={list.title}
+                                tasks={taskToShow}
+                                removeTask={removeTask}
+                                changeFilter={changeFilter}
+                                addTask={addTask}
+                                changeTaskStatus={changeTaskStatus}
+                                activeFilter={list.activeFilter}
+                                changeTaskName={changeTaskName}
+                                changeListName={changeListName}
+                                deleteTodoList={deleteTodoList}
 
-                    />
+                            />
+                        </Paper>
+                    )
+
                 })
             }
             {/*<button onClick={() => createTodolist("New")}>create new todolist</button>*/}
