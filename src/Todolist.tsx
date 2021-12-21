@@ -3,7 +3,7 @@ import {TaskFilterType} from "./App";
 import s from './Todolist.module.css'
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, IconButton, List, ListItem} from "@material-ui/core";
+import {Button, Checkbox, IconButton, List, ListItem} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 
 export type TaskType = {
@@ -65,12 +65,14 @@ export const Todolist = (props: TodolistPropsType) => {
                 {
                     props.tasks.map(task =>
                         <ListItem key={task.id} className={task.isDone ? "is-done" : ""}>
-                            <input type="checkbox" checked={task.isDone}
-                                   onChange={(event) => checkboxClickHandler(props.todolistID, task.id, event.currentTarget.checked)}/>
+                            <Checkbox checked={task.isDone}
+                                      color={"primary"}
+                                      onChange={(event) => checkboxClickHandler(props.todolistID, task.id, event.currentTarget.checked)}/>
                             {/*<span>{task.title}</span>*/}
                             <EditableSpan itemName={task.title}
                                           itemNameChangedCallback={(newName) => changeTaskName(task.id, newName)}/>
-                            <button onClick={() => removeTaskHandler(props.todolistID, task.id)}>X</button>
+                            <IconButton size={"small"}
+                                        onClick={() => removeTaskHandler(props.todolistID, task.id)}><Delete/></IconButton>
                         </ListItem>)
                 }
             </List>

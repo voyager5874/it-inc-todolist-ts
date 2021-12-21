@@ -1,42 +1,25 @@
-/*.todolistWrapper {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
+/*.commonButton {*/
+/*    margin: 5px;*/
+/*    padding: 3px;*/
+/*    cursor: pointer;*/
+/*    min-width: 30px;*/
+/*    border: 0;*/
+/*    border-radius: 5px;*/
 /*}*/
 
-.commonButton {
-    margin: 5px;
-    padding: 3px;
-    cursor: pointer;
-    min-width: 30px;
-    border: 0;
-    border-radius: 5px;
-}
-
-.deleteButton {
-    display: inline-block;
-    background-color: firebrick;
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.deleteButton:hover {
-    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
-}
-
-h3 {
-    display: inline-block;
-}
-
-/*.customInput {*/
-/*    margin: 2px;*/
-/*    height: 20px;*/
-/*    outline: none;*/
-/*    !*border: 0;*!*/
-/*    border-radius: 4px;*/
+/*.deleteButton {*/
+/*    display: inline-block;*/
+/*    background-color: firebrick;*/
+/*    color: white;*/
+/*    font-weight: bold;*/
 /*    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
 /*}*/
 
-/*.customInput:focus {*/
-/*    outline: none;*/
+/*.deleteButton:hover {*/
+/*    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);*/
 /*}*/
+
+/*h3 {*/
+/*    display: inline-block;*/
+/*}*/
+

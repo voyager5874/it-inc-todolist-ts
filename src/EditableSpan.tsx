@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import s from './EditableSpan.module.css'
+import {TextField} from "@material-ui/core";
 
 type EditableSpanPropsType = {
     itemName: string
@@ -44,8 +45,9 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
 
     return (
         editMode ?
-            <input
-                className={`${error ? 'error' : ''} ${s.input}`}
+            <TextField
+                error={Boolean(error)}
+                helperText={error}
                 onKeyPress={enterPressHandler}
                 autoFocus={true}
                 onBlur={saveNewName}

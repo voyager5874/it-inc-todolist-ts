@@ -3,7 +3,8 @@ import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
-import {Paper} from "@material-ui/core";
+import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
+import {Menu} from "@material-ui/icons";
 
 export type TaskFilterType = 'all' | 'completed' | 'active';
 export type TodolistType = {
@@ -90,34 +91,56 @@ export const App = () => {
     }
 
     return (
-        <div className="App">
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{justifyContent: "space-between"}}>
+                    <IconButton edge="start" color="inherit" aria-label="menu">
+                        <Menu/>
+                    </IconButton>
+                    <Typography variant="h6">
+                        Todolists
+                    </Typography>
+                    <Button color="inherit" variant={"outlined"}>Login</Button>
+                </Toolbar>
+            </AppBar>
+            <Container fixed>
+                <Grid container style={{padding: "20px"}}>
+                    <AddItemForm addItemCallback={(listName) => addTodolist(listName)}/>
+                </Grid>
+                <Grid container spacing={3}>
+                    {
+                        todolists.map(list => {
+                            let taskToShow = getFilteredTasks(list)
+                            return (
+                                <Grid item>
+                                    <Paper key={list.id} style={{padding: "20px"}} elevation={10}>
+                                        <Todolist
+                                            todolistID={list.id}
+                                            title={list.title}
+                                            tasks={taskToShow}
+                                            removeTask={removeTask}
+                                            changeFilter={changeFilter}
+                                            addTask={addTask}
+                                            changeTaskStatus={changeTaskStatus}
+                                            activeFilter={list.activeFilter}
+                                            changeTaskName={changeTaskName}
+                                            changeListName={changeListName}
+                                            deleteTodoList={deleteTodoList}
 
-            <AddItemForm addItemCallback={(listName) => addTodolist(listName)}/>
-            {
-                todolists.map(list => {
-                    let taskToShow = getFilteredTasks(list)
-                    return (
-                        <Paper key={list.id} style={{padding: "20px"}} elevation={10}>
-                            <Todolist
-                                todolistID={list.id}
-                                title={list.title}
-                                tasks={taskToShow}
-                                removeTask={removeTask}
-                                changeFilter={changeFilter}
-                                addTask={addTask}
-                                changeTaskStatus={changeTaskStatus}
-                                activeFilter={list.activeFilter}
-                                changeTaskName={changeTaskName}
-                                changeListName={changeListName}
-                                deleteTodoList={deleteTodoList}
+                                        />
+                                    </Paper>
+                                </Grid>
 
-                            />
-                        </Paper>
-                    )
+                            )
 
-                })
-            }
-            {/*<button onClick={() => createTodolist("New")}>create new todolist</button>*/}
+                        })
+                    }
+                </Grid>
+
+
+            </Container>
+
         </div>
-    );
+    )
+        ;
 }
