@@ -30,14 +30,26 @@ export const tasksActionsReducer = (state: TasksListType, action: TasksActionsTy
             }
         case 'NEW-ENTRY':
             return {...state, [action.payload.listID]: []}
+        case 'CHANGE-NAME':
+            return {
+                ...state,
+                [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {
+                    ...task,
+                    title: action.payload.newName
+                } : task)
+            }
         default:
             return state
     }
 
 }
 
-type TasksActionsType = AddTaskActionType | RemoveTaskActionType | CreateNewEntryActionType | ChangeTaskStatusActionType
-// type TasksActionsType = AddTaskActionType | RemoveTaskActionType | ChangeTaskStatusActionType
+type TasksActionsType =
+    AddTaskActionType
+    | RemoveTaskActionType
+    | CreateNewEntryActionType
+    | ChangeTaskStatusActionType
+    | ChangeTaskNameActionType
 
 type AddTaskActionType = ReturnType<typeof addTaskAC>
 
@@ -78,6 +90,22 @@ export const changeTaskStatusAC = (listID: string, taskID: string, newStatus: bo
         }
     } as const
 }
+
+
+type ChangeTaskNameActionType = ReturnType<typeof changeTaskNameAC>
+
+export const changeTaskNameAC = (listID: string, taskID: string, newName: string) => {
+    //preparation code
+    return {
+        type: 'CHANGE-NAME',
+        payload: {
+            listID,
+            taskID,
+            newName
+        }
+    } as const
+}
+
 
 type CreateNewEntryActionType = ReturnType<typeof createNewEntryAC>
 

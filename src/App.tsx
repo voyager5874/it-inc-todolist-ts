@@ -6,13 +6,19 @@ import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {
-    addTaskAC,
+    addTaskAC, changeTaskNameAC,
     changeTaskStatusAC,
     createNewEntryAC,
     removeTaskAC,
     tasksActionsReducer
 } from "./state/tasksActionsReducer";
-import {addListAC, changeFilterAC, listsActionsReducer, removeListAC} from "./state/listsActionsReducer";
+import {
+    addListAC,
+    changeFilterAC,
+    changeListNameAC,
+    listsActionsReducer,
+    removeListAC
+} from "./state/listsActionsReducer";
 
 export type TasksFilterType = 'all' | 'completed' | 'active';
 export type TodolistType = {
@@ -51,15 +57,10 @@ export const App = () => {
     )
 
     const changeFilter = (todolistID: string, newFilterValue: TasksFilterType) => {
-        // setTodolists(todolists.map(list => list.id === todolistID ? {...list, activeFilter: newFilterValue} : list))
         listsActionsDispatch(changeFilterAC(todolistID, newFilterValue))
     }
 
     const changeTaskStatus = (todolistID: string, taskID: string, newStatus: boolean) => {
-        // setTasks({
-        //     ...tasks,
-        //     [todolistID]: tasks[todolistID].map(task => task.id === taskID ? {...task, isDone: newStatus} : task)
-        // })
         tasksActionsDispatch(changeTaskStatusAC(todolistID, taskID, newStatus))
     }
 
@@ -75,36 +76,26 @@ export const App = () => {
     }
 
     const addTask = (todolistID: string, name: string) => {
-        // setTasks({...tasks, [todolistID]: [{id: v1(), title: name, isDone: false}, ...tasks[todolistID]]}) //вроде это не изменение стейта напрямую - создание нового объекта на месте
         tasksActionsDispatch(addTaskAC(todolistID, name))
     }
     const removeTask = (todolistID: string, taskID: string) => {
-        // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(task => task.id !== taskID)})
         tasksActionsDispatch(removeTaskAC(todolistID, taskID))
     }
     const addTodolist = (listName: string) => {
         if (listName) {
             let newID = v1()
-            //     const newTodolist: TodolistType = {id: v1(), title: listName, activeFilter: 'all'}
-            //     setTodolists([...todolists, newTodolist])
-            //     setTasks({...tasks, [newTodolist.id]: []})
             tasksActionsDispatch(createNewEntryAC(newID))
             listsActionsDispatch(addListAC(listName, newID))
-            // tasksActionsDispatch(createNewEntryAC(newID))
         }
     }
     const deleteTodoList = (todolistID: string) => {
-        // setTodolists(todolists.filter(list => list.id !== todolistID))
         listsActionsDispatch(removeListAC(todolistID))
     }
     const changeTaskName = (todolistID: string, taskID: string, newName: string) => {
-        // setTasks({
-        //     ...tasks,
-        //     [todolistID]: tasks[todolistID].map(task => task.id === taskID ? {...task, title: newName} : task)
-        // })
+        tasksActionsDispatch(changeTaskNameAC(todolistID, taskID, newName))
     }
     const changeListName = (todolistID: string, newName: string) => {
-        // setTodolists(todolists.map(list => list.id === todolistID ? {...list, title: newName} : list))
+        listsActionsDispatch(changeListNameAC(todolistID, newName))
     }
 
     return (

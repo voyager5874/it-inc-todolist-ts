@@ -1,5 +1,4 @@
 import {TasksFilterType, TodolistType} from "../App";
-import {v1} from "uuid";
 
 
 export const listsActionsReducer = (state: Array<TodolistType>, action: ListsActionsType): Array<TodolistType> => {
@@ -13,13 +12,18 @@ export const listsActionsReducer = (state: Array<TodolistType>, action: ListsAct
                 ...list,
                 activeFilter: action.payload.activeFilter
             } : list)
+        case 'CHANGE-NAME':
+            return state.map(list => list.id === action.payload.listID ? {
+                ...list,
+                title: action.payload.newName
+            } : list)
         default:
             return state
     }
 
 };
 
-type ListsActionsType = AddListActionType | RemoveListActionType | ChangeFilterActionType
+type ListsActionsType = AddListActionType | RemoveListActionType | ChangeFilterActionType | ChangeListNameActionType
 
 type RemoveListActionType = ReturnType<typeof removeListAC>
 export const removeListAC = (listID: string) => {
@@ -49,6 +53,17 @@ export const changeFilterAC = (listID: string, filter: TasksFilterType) => {
         payload: {
             listID: listID,
             activeFilter: filter
+        }
+    } as const
+}
+
+type ChangeListNameActionType = ReturnType<typeof changeListNameAC>
+export const changeListNameAC = (listID: string, newName: string) => {
+    return {
+        type: 'CHANGE-NAME',
+        payload: {
+            listID,
+            newName
         }
     } as const
 }
