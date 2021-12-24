@@ -1,5 +1,5 @@
 import React from "react";
-import {TaskFilterType} from "./App";
+import {TasksFilterType} from "./App";
 import s from './Todolist.module.css'
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
@@ -15,9 +15,9 @@ type TodolistPropsType = {
     todolistID: string
     title: string
     tasks: Array<TaskType>
-    activeFilter: TaskFilterType
+    activeFilter: TasksFilterType
     removeTask: (todolistID: string, id: string) => void
-    changeFilter: (todolistID: string, filterValue: TaskFilterType) => void
+    changeFilter: (todolistID: string, filterValue: TasksFilterType) => void
     addTask: (todolistID: string, taskName: string) => void
     changeTaskStatus: (todolistID: string, id: string, newStatus: boolean) => void
     deleteTodoList: (todolistID: string) => void
@@ -33,7 +33,7 @@ export const Todolist = (props: TodolistPropsType) => {
     const removeTaskHandler = (todolistID: string, id: string) => {
         props.removeTask(todolistID, id)
     }
-    const changeFilterHandler = (todolistID: string, filter: TaskFilterType) => {
+    const changeFilterHandler = (todolistID: string, filter: TasksFilterType) => {
         props.changeFilter(todolistID, filter)
     }
     const checkboxClickHandler = (todolistID: string, taskID: string, newTaskStatus: boolean) => {

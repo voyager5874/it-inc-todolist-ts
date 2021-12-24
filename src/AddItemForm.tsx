@@ -34,6 +34,7 @@ export const AddItemForm = (props: addItemFormPropsType) => {
     return (
         <div>
             <TextField
+                label={"Title"}
                 size={"small"}
                 variant={"outlined"}
                 value={inputText}
