@@ -1,10 +1,11 @@
 import React from "react";
 import {TasksFilterType} from "./App";
-import s from './Todolist.module.css'
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, Checkbox, IconButton, List, ListItem} from "@material-ui/core";
+import {Button, Checkbox, Divider, IconButton, List, ListItem} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
+import {Backspace} from "@material-ui/icons";
+import styled from "styled-components";
 
 export type TaskType = {
     id: string
@@ -23,8 +24,37 @@ type TodolistPropsType = {
     deleteTodoList: (todolistID: string) => void
     changeTaskName: (todolistID: string, taskID: string, newName: string) => void
     changeListName: (todolistID: string, newName: string) => void
-
 }
+
+// const StyledListItem = styled(ListItem)`
+//
+//   display: flex;
+//   justify-content: space-between;
+//   border: 1px solid blue;
+// `
+
+// const StyledListItem = styled(List)`
+//   & .MuiListItem-root: {
+//   "justify-content: space-between;"
+//   }
+//
+// `
+
+
+const TodolistCard = styled.div`
+  min-width: 300px;
+`
+
+const FilterButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-right: 0;
+`
+
+const TaskNameWithCheckboxWrapper = styled.div`
+  //min-width: 260px;
+`
+
 export const Todolist = (props: TodolistPropsType) => {
 
     const addTask = (taskName: string) => {
@@ -53,7 +83,7 @@ export const Todolist = (props: TodolistPropsType) => {
 
 
     return (
-        <div className={s.todolistWrapper}>
+        <TodolistCard>
             <h3>
                 <EditableSpan itemName={props.title} itemNameChangedCallback={(newName) => changeListName(newName)}/>
                 <IconButton onClick={deleteTodolistHandler}>
@@ -61,22 +91,31 @@ export const Todolist = (props: TodolistPropsType) => {
                 </IconButton>
             </h3>
             <AddItemForm addItemCallback={(taskName) => addTask(taskName)}/>
-            <List>
+            <List disablePadding>
                 {
                     props.tasks.map(task =>
-                        <ListItem key={task.id} className={task.isDone ? "is-done" : ""}>
-                            <Checkbox checked={task.isDone}
-                                      color={"primary"}
-                                      onChange={(event) => checkboxClickHandler(props.todolistID, task.id, event.currentTarget.checked)}/>
-                            {/*<span>{task.title}</span>*/}
-                            <EditableSpan itemName={task.title}
-                                          itemNameChangedCallback={(newName) => changeTaskName(task.id, newName)}/>
+                        <ListItem disableGutters key={task.id}
+                                  style={{justifyContent: "space-between"}}
+                        >
+                            <TaskNameWithCheckboxWrapper>
+                                <Checkbox checked={task.isDone}
+                                          color={"primary"}
+                                          onChange={(event) => checkboxClickHandler(props.todolistID, task.id, event.currentTarget.checked)}/>
+                                <EditableSpan itemName={task.title}
+                                              itemNameChangedCallback={(newName) => changeTaskName(task.id, newName)}/>
+                            </TaskNameWithCheckboxWrapper>
+
                             <IconButton size={"small"}
-                                        onClick={() => removeTaskHandler(props.todolistID, task.id)}><Delete/></IconButton>
+                                // variant={"contained"}
+                                        onClick={() => removeTaskHandler(props.todolistID, task.id)}><Backspace
+                                color={"primary"}
+                            /></IconButton>
                         </ListItem>)
+
                 }
+                {/*< Divider variant="inset" component="li"/>*/}
             </List>
-            <div>
+            <FilterButtonsWrapper>
                 <Button variant="contained" color={props.activeFilter === "all" ? "primary" : "default"}
                         onClick={() => changeFilterHandler(props.todolistID, 'all')}>All
                 </Button>
@@ -86,8 +125,8 @@ export const Todolist = (props: TodolistPropsType) => {
                 <Button variant="contained" color={props.activeFilter === "completed" ? "primary" : "default"}
                         onClick={() => changeFilterHandler(props.todolistID, 'completed')}>Completed
                 </Button>
-            </div>
+            </FilterButtonsWrapper>
 
-        </div>
+        </TodolistCard>
     )
 }

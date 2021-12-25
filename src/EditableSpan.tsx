@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import s from './EditableSpan.module.css'
 import {TextField} from "@material-ui/core";
+
 
 type EditableSpanPropsType = {
     itemName: string

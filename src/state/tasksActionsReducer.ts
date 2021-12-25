@@ -1,4 +1,3 @@
-import {TaskType} from "../Todolist";
 import {v1} from "uuid";
 import {TasksListType} from "../App";
 
@@ -6,7 +5,6 @@ import {TasksListType} from "../App";
 export const tasksActionsReducer = (state: TasksListType, action: TasksActionsType): TasksListType => {
     switch (action.type) {
         case 'ADD-TASK':
-            // return {...state, action.payload.listID:[...state.action.payload.listID, {id: v1(), title: action.payload.title, isDone: false}]}
             return {
                 ...state,
                 [action.payload.listID]: [...state[action.payload.listID], {

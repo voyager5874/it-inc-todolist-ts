@@ -1,11 +1,17 @@
 import React, {useState} from 'react';
-import s from "./AddItemForm.module.css";
 import {IconButton, TextField} from "@material-ui/core";
 import {AddBox} from "@material-ui/icons";
+import styled from "styled-components";
 
 type addItemFormPropsType = {
     addItemCallback: (itemName: string) => void
 }
+const AddItemFormWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+`
+
 
 export const AddItemForm = (props: addItemFormPropsType) => {
     const [inputText, setInputText] = useState<string>('')
@@ -32,19 +38,17 @@ export const AddItemForm = (props: addItemFormPropsType) => {
 
 
     return (
-        <div>
+        <AddItemFormWrapper>
             <TextField
-                label={"Title"}
+                label={inputError ? 'give it a name' : 'Title'}
                 size={"small"}
                 variant={"outlined"}
                 value={inputText}
                 error={inputError}
-                helperText={inputError ? 'give it a name' : ''}
                 onChange={inputChangeHandler}
                 onKeyPress={keyPressWithinInputHandler}/>
             <IconButton onClick={addItem}><AddBox/></IconButton>
-            {/*{inputError && <div className={"error-message"}>give it a name</div>}*/}
-        </div>
+        </AddItemFormWrapper>
     );
 };
 

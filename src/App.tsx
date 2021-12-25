@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
@@ -112,7 +112,7 @@ export const App = () => {
                 </Toolbar>
             </AppBar>
             <Container fixed>
-                <Grid container style={{padding: "20px"}}>
+                <Grid container style={{paddingTop: "20px"}}>
                     <AddItemForm addItemCallback={(listName) => addTodolist(listName)}/>
                 </Grid>
                 <Grid container spacing={3}>
