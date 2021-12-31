@@ -2,7 +2,7 @@ import React from "react";
 import {TasksFilterType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, Checkbox, Divider, IconButton, List, ListItem} from "@material-ui/core";
+import {Button, Checkbox, IconButton, List, ListItem} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 import {Backspace} from "@material-ui/icons";
 import styled from "styled-components";

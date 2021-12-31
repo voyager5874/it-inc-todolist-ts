@@ -28,6 +28,14 @@ export const tasksActionsReducer = (state: TasksListType, action: TasksActionsTy
             }
         case 'NEW-ENTRY':
             return {...state, [action.payload.listID]: []}
+
+        case 'DELETE-ENTRY': {
+            debugger
+            const stateCopy = {...state}
+            delete stateCopy[action.payload.listID]
+            return stateCopy
+        }
+
         case 'CHANGE-NAME':
             return {
                 ...state,
@@ -48,6 +56,7 @@ type TasksActionsType =
     | CreateNewEntryActionType
     | ChangeTaskStatusActionType
     | ChangeTaskNameActionType
+    | RemoveEntryActionType
 
 type AddTaskActionType = ReturnType<typeof addTaskAC>
 
@@ -111,6 +120,18 @@ export const createNewEntryAC = (listID: string) => {
     //preparation code
     return {
         type: 'NEW-ENTRY',
+        payload: {
+            listID: listID
+        }
+    } as const
+}
+
+type RemoveEntryActionType = ReturnType<typeof removeEntryAC>
+
+export const removeEntryAC = (listID: string) => {
+    //preparation code
+    return {
+        type: 'DELETE-ENTRY',
         payload: {
             listID: listID
         }

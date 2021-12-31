@@ -7,7 +7,7 @@ import {Menu} from "@material-ui/icons";
 import {
     addTaskAC, changeTaskNameAC,
     changeTaskStatusAC,
-    createNewEntryAC,
+    createNewEntryAC, removeEntryAC,
     removeTaskAC,
     tasksActionsReducer
 } from "./state/tasksActionsReducer";
@@ -89,6 +89,8 @@ export const App = () => {
     }
     const deleteTodoList = (todolistID: string) => {
         listsActionsDispatch(removeListAC(todolistID))
+        debugger
+        tasksActionsDispatch(removeEntryAC(todolistID))
     }
     const changeTaskName = (todolistID: string, taskID: string, newName: string) => {
         tasksActionsDispatch(changeTaskNameAC(todolistID, taskID, newName))
