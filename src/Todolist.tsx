@@ -53,6 +53,7 @@ const FilterButtonsWrapper = styled.div`
 
 const TaskNameWithCheckboxWrapper = styled.div`
   //min-width: 260px;
+  //border-bottom: 2px solid gray;
 `
 
 export const Todolist = (props: TodolistPropsType) => {
