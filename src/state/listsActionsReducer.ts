@@ -32,7 +32,7 @@ export const removeListAC = (listID: string) => {
         type: 'REMOVE-LIST',
         payload: {
             listID: listID,
-        }
+        },
     } as const
 }
 
@@ -43,7 +43,7 @@ export const addListAC = (name: string) => {
         payload: {
             name: name,
             listID: v1(),
-        }
+        },
     } as const
 }
 
@@ -64,7 +64,7 @@ export const changeListNameAC = (listID: string, newName: string) => {
         type: 'CHANGE-NAME',
         payload: {
             listID,
-            newName
-        }
+            newName,
+        },
     } as const
 }
