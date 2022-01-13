@@ -21,7 +21,7 @@ export const listsActionsReducer = (state: Array<TodolistType> = initialState, a
                 ...list,
                 activeFilter: action.payload.activeFilter
             } : list)
-        case 'CHANGE-NAME':
+        case 'CHANGE-LIST-NAME':
             return state.map(list => list.id === action.payload.listID ? {
                 ...list,
                 title: action.payload.newName
@@ -69,7 +69,7 @@ export const changeFilterAC = (listID: string, filter: TasksFilterType) => {
 type ChangeListNameActionType = ReturnType<typeof changeListNameAC>
 export const changeListNameAC = (listID: string, newName: string) => {
     return {
-        type: 'CHANGE-NAME',
+        type: 'CHANGE-LIST-NAME',
         payload: {
             listID,
             newName,

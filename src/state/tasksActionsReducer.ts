@@ -39,7 +39,7 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
                 [action.payload.listID]: state[action.payload.listID].filter(task => task.id !== action.payload.taskID)
             }
 
-        case 'CHANGE-STATUS':
+        case 'CHANGE-TASK-STATUS':
             return {
                 ...state,
                 [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {
@@ -58,7 +58,7 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
             return stateCopy
         }
 
-        case 'CHANGE-NAME':
+        case 'CHANGE-TASK-NAME':
             return {
                 ...state,
                 [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {
@@ -112,7 +112,7 @@ type ChangeTaskStatusActionType = ReturnType<typeof changeTaskStatusAC>
 export const changeTaskStatusAC = (listID: string, taskID: string, newStatus: boolean) => {
     //preparation code
     return {
-        type: 'CHANGE-STATUS',
+        type: 'CHANGE-TASK-STATUS',
         payload: {
             listID: listID,
             taskID: taskID,
@@ -127,7 +127,7 @@ type ChangeTaskNameActionType = ReturnType<typeof changeTaskNameAC>
 export const changeTaskNameAC = (listID: string, taskID: string, newName: string) => {
     //preparation code
     return {
-        type: 'CHANGE-NAME',
+        type: 'CHANGE-TASK-NAME',
         payload: {
             listID,
             taskID,

@@ -23,26 +23,6 @@ export const App = () => {
     // export const todolistID1 = v1()
     // export const todolistID2 = v1()
 
-    // const [todolists, listsActionsDispatch] = useReducer(listsActionsReducer, [
-    //     {id: todolistID1, title: "What  to learn", activeFilter: 'all'},
-    //     {id: todolistID2, title: "What  to buy", activeFilter: 'all'},
-    // ])
-    //
-    // const [tasks, tasksActionsDispatch] = useReducer(tasksActionsReducer, {
-    //         [todolistID1]: [
-    //             {id: v1(), title: "HTML&CSS", isDone: true},
-    //             {id: v1(), title: "JS/TS", isDone: true},
-    //             {id: v1(), title: "React", isDone: false},
-    //             {id: v1(), title: "Redux", isDone: false},
-    //         ],
-    //         [todolistID2]: [
-    //             {id: v1(), title: "HTML&CSS", isDone: true},
-    //             {id: v1(), title: "JS/TS", isDone: true},
-    //             {id: v1(), title: "React", isDone: false},
-    //             {id: v1(), title: "Redux", isDone: false},
-    //         ]
-    //     }
-    // )
 
     const todolists = useSelector<RootStateType, TodolistType[]>(state => state.lists);
     const tasks = useSelector<RootStateType, TasksListType>(state => state.tasks)
