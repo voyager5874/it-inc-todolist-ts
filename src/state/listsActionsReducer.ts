@@ -1,4 +1,5 @@
 import {TasksFilterType, TodolistType} from "../App";
+import {v1} from "uuid";
 
 
 export const listsActionsReducer = (state: Array<TodolistType>, action: ListsActionsType): Array<TodolistType> => {
@@ -25,23 +26,23 @@ export const listsActionsReducer = (state: Array<TodolistType>, action: ListsAct
 
 type ListsActionsType = AddListActionType | RemoveListActionType | ChangeFilterActionType | ChangeListNameActionType
 
-type RemoveListActionType = ReturnType<typeof removeListAC>
+export type RemoveListActionType = ReturnType<typeof removeListAC>
 export const removeListAC = (listID: string) => {
     return {
         type: 'REMOVE-LIST',
         payload: {
-            listID: listID
+            listID: listID,
         }
     } as const
 }
 
-type AddListActionType = ReturnType<typeof addListAC>
-export const addListAC = (name: string, listID: string) => {
+export type AddListActionType = ReturnType<typeof addListAC>
+export const addListAC = (name: string) => {
     return {
         type: 'ADD-LIST',
         payload: {
             name: name,
-            listID: listID
+            listID: v1(),
         }
     } as const
 }

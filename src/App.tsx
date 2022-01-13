@@ -5,9 +5,9 @@ import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {
-    addTaskAC, changeTaskNameAC,
+    addTaskAC,
+    changeTaskNameAC,
     changeTaskStatusAC,
-    createNewEntryAC, removeEntryAC,
     removeTaskAC,
     tasksActionsReducer
 } from "./state/tasksActionsReducer";
@@ -36,7 +36,7 @@ export const App = () => {
 
     const [todolists, listsActionsDispatch] = useReducer(listsActionsReducer, [
         {id: todolistID1, title: "What  to learn", activeFilter: 'all'},
-        {id: todolistID2, title: "What  to buy", activeFilter: 'all'}
+        {id: todolistID2, title: "What  to buy", activeFilter: 'all'},
     ])
 
     const [tasks, tasksActionsDispatch] = useReducer(tasksActionsReducer, {
@@ -44,13 +44,13 @@ export const App = () => {
                 {id: v1(), title: "HTML&CSS", isDone: true},
                 {id: v1(), title: "JS/TS", isDone: true},
                 {id: v1(), title: "React", isDone: false},
-                {id: v1(), title: "Redux", isDone: false}
+                {id: v1(), title: "Redux", isDone: false},
             ],
             [todolistID2]: [
                 {id: v1(), title: "HTML&CSS", isDone: true},
                 {id: v1(), title: "JS/TS", isDone: true},
                 {id: v1(), title: "React", isDone: false},
-                {id: v1(), title: "Redux", isDone: false}
+                {id: v1(), title: "Redux", isDone: false},
             ]
         }
     )
@@ -58,11 +58,9 @@ export const App = () => {
     const changeFilter = (todolistID: string, newFilterValue: TasksFilterType) => {
         listsActionsDispatch(changeFilterAC(todolistID, newFilterValue))
     }
-
     const changeTaskStatus = (todolistID: string, taskID: string, newStatus: boolean) => {
         tasksActionsDispatch(changeTaskStatusAC(todolistID, taskID, newStatus))
     }
-
     const getFilteredTasks = (todolist: TodolistType) => {
         let filteredTasks = tasks[todolist.id];
         if (todolist.activeFilter === 'active') {
@@ -73,7 +71,6 @@ export const App = () => {
         }
         return filteredTasks
     }
-
     const addTask = (todolistID: string, name: string) => {
         tasksActionsDispatch(addTaskAC(todolistID, name))
     }
@@ -82,15 +79,15 @@ export const App = () => {
     }
     const addTodolist = (listName: string) => {
         if (listName) {
-            let newID = v1()
-            tasksActionsDispatch(createNewEntryAC(newID))
-            listsActionsDispatch(addListAC(listName, newID))
+            let action = addListAC(listName)
+            tasksActionsDispatch(action)
+            listsActionsDispatch(action)
         }
     }
     const deleteTodoList = (todolistID: string) => {
-        listsActionsDispatch(removeListAC(todolistID))
-        debugger
-        tasksActionsDispatch(removeEntryAC(todolistID))
+        let action = removeListAC(todolistID)
+        listsActionsDispatch(action)
+        tasksActionsDispatch(action)
     }
     const changeTaskName = (todolistID: string, taskID: string, newName: string) => {
         tasksActionsDispatch(changeTaskNameAC(todolistID, taskID, newName))
@@ -121,8 +118,8 @@ export const App = () => {
                         todolists.map(list => {
                             let taskToShow = getFilteredTasks(list)
                             return (
-                                <Grid item>
-                                    <Paper key={list.id} style={{padding: "20px"}} elevation={10}>
+                                <Grid item key={list.id}>
+                                    <Paper style={{padding: "20px"}} elevation={10}>
                                         <Todolist
                                             todolistID={list.id}
                                             title={list.title}
@@ -135,20 +132,14 @@ export const App = () => {
                                             changeTaskName={changeTaskName}
                                             changeListName={changeListName}
                                             deleteTodoList={deleteTodoList}
-
                                         />
                                     </Paper>
                                 </Grid>
-
                             )
-
                         })
                     }
                 </Grid>
-
-
             </Container>
-
         </div>
     )
         ;

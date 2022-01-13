@@ -1,23 +1,27 @@
 import {v1} from "uuid";
 import {TasksListType} from "../App";
+import {AddListActionType, RemoveListActionType} from "./listsActionsReducer";
 
 
 export const tasksActionsReducer = (state: TasksListType, action: TasksActionsType): TasksListType => {
     switch (action.type) {
+
         case 'ADD-TASK':
             return {
                 ...state,
                 [action.payload.listID]: [...state[action.payload.listID], {
                     id: v1(),
                     title: action.payload.title,
-                    isDone: false
+                    isDone: false,
                 }]
             }
+
         case 'REMOVE-TASK':
             return {
                 ...state,
                 [action.payload.listID]: state[action.payload.listID].filter(task => task.id !== action.payload.taskID)
             }
+
         case 'CHANGE-STATUS':
             return {
                 ...state,
@@ -26,11 +30,11 @@ export const tasksActionsReducer = (state: TasksListType, action: TasksActionsTy
                     isDone: action.payload.isDone
                 } : task)
             }
-        case 'NEW-ENTRY':
+
+        case 'ADD-LIST':
             return {...state, [action.payload.listID]: []}
 
-        case 'DELETE-ENTRY': {
-            debugger
+        case 'REMOVE-LIST': {
             const stateCopy = {...state}
             delete stateCopy[action.payload.listID]
             return stateCopy
@@ -44,6 +48,7 @@ export const tasksActionsReducer = (state: TasksListType, action: TasksActionsTy
                     title: action.payload.newName
                 } : task)
             }
+
         default:
             return state
     }
@@ -53,10 +58,10 @@ export const tasksActionsReducer = (state: TasksListType, action: TasksActionsTy
 type TasksActionsType =
     AddTaskActionType
     | RemoveTaskActionType
-    | CreateNewEntryActionType
     | ChangeTaskStatusActionType
     | ChangeTaskNameActionType
-    | RemoveEntryActionType
+    | AddListActionType
+    | RemoveListActionType
 
 type AddTaskActionType = ReturnType<typeof addTaskAC>
 
@@ -66,7 +71,7 @@ export const addTaskAC = (listID: string, title: string) => {
         type: 'ADD-TASK',
         payload: {
             title: title,
-            listID: listID
+            listID: listID,
         }
     } as const
 }
@@ -79,7 +84,7 @@ export const removeTaskAC = (listID: string, taskID: string) => {
         type: 'REMOVE-TASK',
         payload: {
             listID: listID,
-            taskID: taskID
+            taskID: taskID,
         }
     } as const
 }
@@ -93,7 +98,7 @@ export const changeTaskStatusAC = (listID: string, taskID: string, newStatus: bo
         payload: {
             listID: listID,
             taskID: taskID,
-            isDone: newStatus
+            isDone: newStatus,
         }
     } as const
 }
@@ -108,32 +113,7 @@ export const changeTaskNameAC = (listID: string, taskID: string, newName: string
         payload: {
             listID,
             taskID,
-            newName
-        }
-    } as const
-}
-
-
-type CreateNewEntryActionType = ReturnType<typeof createNewEntryAC>
-
-export const createNewEntryAC = (listID: string) => {
-    //preparation code
-    return {
-        type: 'NEW-ENTRY',
-        payload: {
-            listID: listID
-        }
-    } as const
-}
-
-type RemoveEntryActionType = ReturnType<typeof removeEntryAC>
-
-export const removeEntryAC = (listID: string) => {
-    //preparation code
-    return {
-        type: 'DELETE-ENTRY',
-        payload: {
-            listID: listID
+            newName,
         }
     } as const
 }
