@@ -13,12 +13,15 @@ const AddItemFormWrapper = styled.div`
 `
 
 
-export const AddItemForm = (props: addItemFormPropsType) => {
+export const AddItemForm = React.memo((props: addItemFormPropsType) => {
+    console.log("AddItemForm called")
     const [inputText, setInputText] = useState<string>('')
     const [inputError, setInputError] = useState<boolean>(false)
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputError(false)
+        if (inputError) {
+            setInputError(false)
+        }
         setInputText(event.currentTarget.value)
     }
     const addItem = () => {
@@ -50,5 +53,5 @@ export const AddItemForm = (props: addItemFormPropsType) => {
             <IconButton onClick={addItem}><AddBox/></IconButton>
         </AddItemFormWrapper>
     );
-};
+});
 

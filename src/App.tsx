@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {TaskType, Todolist} from "./Todolist";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
@@ -18,16 +18,16 @@ export type TasksListType = {
 }
 
 export const App = () => {
-
+    console.log("app was called")
     const todolists = useSelector<RootStateType, TodolistType[]>(state => state.lists);
     const dispatch = useDispatch()
 
-    const addTodolist = (listName: string) => {
+    const addTodolist = useCallback((listName: string) => {
         if (listName) {
             let action = addListAC(listName)
             dispatch(action)
         }
-    }
+    }, [dispatch])
 
     return (
         <div>
