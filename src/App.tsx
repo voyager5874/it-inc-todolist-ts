@@ -44,7 +44,7 @@ export const App = () => {
             </AppBar>
             <Container fixed>
                 <Grid container style={{paddingTop: "20px"}}>
-                    <AddItemForm addItemCallback={(listName) => addTodolist(listName)}/>
+                    <AddItemForm addItemCallback={addTodolist}/>
                 </Grid>
                 <Grid container spacing={3}>
                     {

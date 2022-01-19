@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {IconButton, TextField} from "@material-ui/core";
 import {AddBox} from "@material-ui/icons";
 import styled from "styled-components";
@@ -14,30 +14,30 @@ const AddItemFormWrapper = styled.div`
 
 
 export const AddItemForm = React.memo((props: addItemFormPropsType) => {
-    console.log("AddItemForm called")
+    console.log(`AddItemForm with "${props.addItemCallback.toString()}" callback was called`)
     const [inputText, setInputText] = useState<string>('')
     const [inputError, setInputError] = useState<boolean>(false)
 
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         if (inputError) {
             setInputError(false)
         }
         setInputText(event.currentTarget.value)
-    }
-    const addItem = () => {
+    }, [])
+    const addItem = useCallback(() => {
         if (inputText.trim()) {
             props.addItemCallback(inputText.trim())
         } else {
             setInputError(true)
         }
         setInputText('')
-    }
+    },[props.addItemCallback])
 
-    const keyPressWithinInputHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const keyPressWithinInputHandler = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             addItem()
         }
-    }
+    }, [])
 
 
     return (

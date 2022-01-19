@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {TextField} from "@material-ui/core";
 
 
@@ -9,7 +9,7 @@ type EditableSpanPropsType = {
 
 
 export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
-    console.log("editableSpan called")
+    console.log(`editableSpan was called, text: ${props.itemName}`)
     const [editMode, setEditMode] = useState<boolean>(false)
     const [inputText, setInputText] = useState('')
     const [error, setError] = useState<boolean>(false)
@@ -19,12 +19,12 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
         setInputText(props.itemName)
     }
 
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setError(false)
         setInputText(event.currentTarget.value)
-    }
+    }, [])
 
-    const saveNewName = () => {
+    const saveNewName = useCallback(() => {
         const cleanInputText = inputText.trim()
         if (cleanInputText) {
             setEditMode(false)
@@ -35,13 +35,13 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
             setError(true)
         }
 
-    }
+    }, [])
 
-    const enterPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const enterPressHandler = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             saveNewName()
         }
-    }
+    }, [])
 
     return (
         editMode ?

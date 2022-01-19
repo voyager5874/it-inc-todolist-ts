@@ -48,29 +48,26 @@ const FilterButtonsWrapper = styled.div`
 `
 
 
-
 export const Todolist = React.memo((props: TodolistPropsType) => {
-    console.log("todolist called")
+    console.log(`todolist was called, title: ${props.title}`)
     const tasks = useSelector<RootStateType, Array<TaskType>>(state => state.tasks[props.todolistID])
     const dispatch = useDispatch()
+
+    let filteredTasks = tasks
+    if (props.activeFilter === 'active') {
+        filteredTasks = tasks.filter(task => !task.isDone)
+    }
+    if (props.activeFilter === 'completed') {
+        filteredTasks = tasks.filter(task => task.isDone)
+    }
 
     const changeTaskStatus = useCallback((taskID: string, newStatus: boolean) => {
         dispatch(changeTaskStatusAC(props.todolistID, taskID, newStatus))
     }, [dispatch, props.todolistID])
 
-    const getFilteredTasks = () => {
-        if (props.activeFilter === 'active') {
-            return tasks.filter(task => !task.isDone)
-        }
-        if (props.activeFilter === 'completed') {
-            return tasks.filter(task => task.isDone)
-        }
-        return tasks
-    }
-
     const addTask = useCallback((name: string) => {
         dispatch(addTaskAC(props.todolistID, name))
-    }, [dispatch, props.todolistID])
+    }, [props.todolistID])
 
     const removeTask = useCallback((taskID: string) => {
         dispatch(removeTaskAC(props.todolistID, taskID))
@@ -78,16 +75,16 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 
     const changeFilter = useCallback((newFilterValue: TasksFilterType) => {
         dispatch(changeFilterAC(props.todolistID, newFilterValue))
-    },[dispatch, props.todolistID])
+    }, [dispatch, props.todolistID])
 
-    const deleteTodolist = () => {
+    const deleteTodolist = useCallback(() => {
         let action = removeListAC(props.todolistID)
         dispatch(action)
-    }
+    }, [dispatch, props.todolistID])
 
     const changeTaskName = useCallback((taskID: string, newName: string) => {
         dispatch(changeTaskNameAC(props.todolistID, taskID, newName))
-    },[dispatch, props.todolistID])
+    }, [dispatch, props.todolistID])
 
     const changeListName = useCallback((newName: string) => {
         dispatch(changeListNameAC(props.todolistID, newName))
@@ -97,31 +94,19 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     return (
         <TodolistCard>
             <h3>
-                <EditableSpan itemName={props.title} itemNameChangedCallback={(newName) => changeListName(newName)}/>
+                <EditableSpan itemName={props.title} itemNameChangedCallback={changeListName}/>
                 <IconButton onClick={deleteTodolist}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm addItemCallback={(taskName) => addTask(taskName)}/>
+            <AddItemForm addItemCallback={addTask}/>
             <List disablePadding>
                 {
-                    getFilteredTasks().map(task =>
+                    // мапиться нужно по фильрованным таскам
+                    filteredTasks.map(task =>
                         <ListItem disableGutters key={task.id}
                                   style={{justifyContent: "space-between"}}
                         >
-                            {/*<TaskNameWithCheckboxWrapper>*/}
-                            {/*    <Checkbox checked={task.isDone}*/}
-                            {/*              color={"primary"}*/}
-                            {/*              onChange={(event) => changeTaskStatus(task.id, event.currentTarget.checked)}/>*/}
-                            {/*    <EditableSpan itemName={task.title}*/}
-                            {/*                  itemNameChangedCallback={(newName) => changeTaskName(task.id, newName)}/>*/}
-                            {/*</TaskNameWithCheckboxWrapper>*/}
-
-                            {/*<IconButton size={"small"}*/}
-                            {/*    // variant={"contained"}*/}
-                            {/*            onClick={() => removeTask(task.id)}><Backspace*/}
-                            {/*    color={"primary"}*/}
-                            {/*/></IconButton>*/}
                             <Task taskID={task.id}
                                   isDone={task.isDone}
                                   changeName={changeTaskName}
