@@ -3,14 +3,14 @@ import {Checkbox, IconButton} from "@material-ui/core";
 import {EditableSpan} from "./EditableSpan";
 import {Backspace} from "@material-ui/icons";
 import styled from "styled-components";
-import {useDispatch} from "react-redux";
+import {TaskStatus} from "./api/it-inc-api";
 
 type TaskPropsType = {
     // listID: string
     taskID: string
     taskName: string
     isDone: boolean
-    changeStatus: (taskID:string, newStatus: boolean) => void
+    changeStatus: (taskID:string, newStatus: TaskStatus) => void
     changeName: (taskID: string, newName: string) => void
     removeTask: (taskID: string) => void
 
@@ -18,10 +18,12 @@ type TaskPropsType = {
 
 export const Task = React.memo((props: TaskPropsType) => {
     console.log(`Task was called, title: ${props.taskName}`)
+
     // const dispatch = useDispatch()
 
     const changeStatus = useCallback((event)=>{
-        props.changeStatus(props.taskID, event.currentTarget.checked)
+        const newTaskStatus = event.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
+        props.changeStatus(props.taskID, newTaskStatus)
     },[props.changeStatus, props.taskID])
 
     const changeName = useCallback((newName: string)=>{

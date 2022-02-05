@@ -1,24 +1,28 @@
 import {v1} from "uuid";
-import {TasksListType} from "../App";
 import {AddListActionType, RemoveListActionType, todolistID1, todolistID2} from "./listsActionsReducer";
+import {TaskPriority, TaskStatus, TaskType} from "../api/it-inc-api";
 
 
-// let initialState: TasksListType = {}
+let initialState: TasksListType = {}
 
-let initialState: TasksListType = {
-    [todolistID1]: [
-        {id: v1(), title: "HTML&CSS", isDone: true},
-        {id: v1(), title: "JS/TS", isDone: true},
-        {id: v1(), title: "React", isDone: false},
-        {id: v1(), title: "Redux", isDone: false},
-    ],
-    [todolistID2]: [
-        {id: v1(), title: "HTML&CSS", isDone: true},
-        {id: v1(), title: "JS/TS", isDone: true},
-        {id: v1(), title: "React", isDone: false},
-        {id: v1(), title: "Redux", isDone: false},
-    ]
+export type TasksListType = {
+    [key: string]: Array<TaskType>
 }
+
+// let initialState: TasksListType = {
+//     [todolistID1]: [
+//         {id: v1(), title: "HTML&CSS", isDone: true},
+//         {id: v1(), title: "JS/TS", isDone: true},
+//         {id: v1(), title: "React", isDone: false},
+//         {id: v1(), title: "Redux", isDone: false},
+//     ],
+//     [todolistID2]: [
+//         {id: v1(), title: "HTML&CSS", isDone: true},
+//         {id: v1(), title: "JS/TS", isDone: true},
+//         {id: v1(), title: "React", isDone: false},
+//         {id: v1(), title: "Redux", isDone: false},
+//     ]
+// }
 
 export const tasksActionsReducer = (state: TasksListType = initialState, action: TasksActionsType): TasksListType => {
     switch (action.type) {
@@ -29,7 +33,14 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
                 [action.payload.listID]: [...state[action.payload.listID], {
                     id: v1(),
                     title: action.payload.title,
-                    isDone: false,
+                    status: TaskStatus.New,
+                    todoListId: action.payload.listID,
+                    priority: TaskPriority.Someday,
+                    startDate: '',
+                    deadline: '',
+                    addedDate: '',
+                    order: 0,
+                    description: 'description',
                 }]
             }
 
@@ -44,7 +55,7 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
                 ...state,
                 [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {
                     ...task,
-                    isDone: action.payload.isDone
+                    status: action.payload.status
                 } : task)
             }
 
@@ -109,14 +120,14 @@ export const removeTaskAC = (listID: string, taskID: string) => {
 
 type ChangeTaskStatusActionType = ReturnType<typeof changeTaskStatusAC>
 
-export const changeTaskStatusAC = (listID: string, taskID: string, newStatus: boolean) => {
+export const changeTaskStatusAC = (listID: string, taskID: string, newStatus: TaskStatus) => {
     //preparation code
     return {
         type: 'CHANGE-TASK-STATUS',
         payload: {
             listID: listID,
             taskID: taskID,
-            isDone: newStatus,
+            status: newStatus,
         }
     } as const
 }

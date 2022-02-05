@@ -1,16 +1,21 @@
 import {v1} from 'uuid';
-import {TasksFilterType, TodolistType} from '../App';
-import {addListAC, changeFilterAC, changeListNameAC, listsActionsReducer, removeListAC} from "./listsActionsReducer";
+import {
+    addListAC,
+    changeFilterAC,
+    changeListNameAC,
+    listsActionsReducer,
+    removeListAC, TasksFilterType, TodoListInAppType,
+} from "./listsActionsReducer";
 
 
-let startState: TodolistType[] = [];
+let startState: TodoListInAppType[] = [];
 const todolistId1 = v1();
 const todolistId2 = v1();
 
 beforeEach(() => {
     startState = [
-        {id: todolistId1, title: "What to learn", activeFilter: "all"},
-        {id: todolistId2, title: "What to buy", activeFilter: "all"},
+        {id: todolistId1, title: "What to learn", activeFilter: "all", order: 0, addedDate:''},
+        {id: todolistId2, title: "What to buy", activeFilter: "all", order: 0, addedDate:''},
     ]
 });
 

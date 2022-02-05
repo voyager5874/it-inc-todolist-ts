@@ -1,19 +1,27 @@
-import {TasksFilterType, TodolistType} from "../App";
 import {v1} from "uuid";
+import {TodoListOnServerType} from "../api/it-inc-api";
 
-// let initialState: Array<TodolistType> = []
+
+
+export type TasksFilterType = 'all' | 'completed' | 'active';
+
+export type TodoListInAppType = TodoListOnServerType & {
+    activeFilter: TasksFilterType
+}
+
+let initialState: Array<TodoListInAppType> = []
 
 export const todolistID1 = v1()
 export const todolistID2 = v1()
-let initialState: Array<TodolistType> = [
-    {id: todolistID1, title: "What  to learn", activeFilter: 'all'},
-    {id: todolistID2, title: "What  to buy", activeFilter: 'all'},
-]
+// let initialState: Array<TodolistType> = [
+//     {id: todolistID1, title: "What  to learn", activeFilter: 'all'},
+//     {id: todolistID2, title: "What  to buy", activeFilter: 'all'},
+// ]
 
-export const listsActionsReducer = (state: Array<TodolistType> = initialState, action: ListsActionsType): Array<TodolistType> => {
+export const listsActionsReducer = (state: Array<TodoListInAppType> = initialState, action: ListsActionsType): Array<TodoListInAppType> => {
     switch (action.type) {
         case 'ADD-LIST':
-            return [...state, {id: action.payload.listID, title: action.payload.name, activeFilter: 'all'}]
+            return [...state, {id: action.payload.listID, title: action.payload.name, activeFilter: 'all', addedDate: '', order: 0}]
         case 'REMOVE-LIST':
             return state.filter(list => list.id !== action.payload.listID)
         case 'CHANGE-FILTER':

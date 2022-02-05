@@ -12,26 +12,29 @@ const AddItemFormWrapper = styled.div`
   padding-bottom: 20px;
 `
 
-
 export const AddItemForm = React.memo((props: addItemFormPropsType) => {
     console.log(`AddItemForm with "${props.addItemCallback.toString()}" callback was called`)
     const [inputText, setInputText] = useState<string>('')
     const [inputError, setInputError] = useState<boolean>(false)
 
-    const inputChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        debugger
         if (inputError) {
             setInputError(false)
         }
         setInputText(event.currentTarget.value)
-    }, [])
-    const addItem = useCallback(() => {
-        if (inputText.trim()) {
-            props.addItemCallback(inputText.trim())
+    }
+
+    const addItem = () => {
+        debugger
+        const cleanString = inputText.trim()
+        if (cleanString) {
+            props.addItemCallback(cleanString)
         } else {
             setInputError(true)
         }
         setInputText('')
-    },[props.addItemCallback])
+    }
 
     const keyPressWithinInputHandler = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {

@@ -1,5 +1,4 @@
 import React, {useCallback} from "react";
-import {TasksFilterType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {Button, IconButton, List, ListItem} from "@material-ui/core";
@@ -8,33 +7,16 @@ import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./state/store";
 import {addTaskAC, changeTaskNameAC, changeTaskStatusAC, removeTaskAC} from "./state/tasksActionsReducer";
-import {changeFilterAC, changeListNameAC, removeListAC} from "./state/listsActionsReducer";
+import {changeFilterAC, changeListNameAC, removeListAC, TasksFilterType} from "./state/listsActionsReducer";
 import {Task} from "./Task";
+import {TaskStatus, TaskType} from "./api/it-inc-api";
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+
 type TodolistPropsType = {
     todolistID: string
     title: string
     activeFilter: TasksFilterType
 }
-
-// const StyledListItem = styled(ListItem)`
-//
-//   display: flex;
-//   justify-content: space-between;
-//   border: 1px solid blue;
-// `
-
-// const StyledListItem = styled(List)`
-//   & .MuiListItem-root: {
-//   "justify-content: space-between;"
-//   }
-//
-// `
 
 
 const TodolistCard = styled.div`
@@ -55,13 +37,13 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 
     let filteredTasks = tasks
     if (props.activeFilter === 'active') {
-        filteredTasks = tasks.filter(task => !task.isDone)
+        filteredTasks = tasks.filter(task => task.status===TaskStatus.New)
     }
     if (props.activeFilter === 'completed') {
-        filteredTasks = tasks.filter(task => task.isDone)
+        filteredTasks = tasks.filter(task => task.status===TaskStatus.Completed)
     }
 
-    const changeTaskStatus = useCallback((taskID: string, newStatus: boolean) => {
+    const changeTaskStatus = useCallback((taskID: string, newStatus: TaskStatus) => {
         dispatch(changeTaskStatusAC(props.todolistID, taskID, newStatus))
     }, [dispatch, props.todolistID])
 
@@ -102,13 +84,12 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
             <AddItemForm addItemCallback={addTask}/>
             <List disablePadding>
                 {
-                    // мапиться нужно по фильрованным таскам
                     filteredTasks.map(task =>
                         <ListItem disableGutters key={task.id}
                                   style={{justifyContent: "space-between"}}
                         >
                             <Task taskID={task.id}
-                                  isDone={task.isDone}
+                                  isDone={task.status === TaskStatus.Completed}
                                   changeName={changeTaskName}
                                   taskName={task.title}
                                   changeStatus={changeTaskStatus}

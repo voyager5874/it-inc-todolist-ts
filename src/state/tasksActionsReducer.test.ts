@@ -1,7 +1,7 @@
-import {TasksListType} from "../App";
-import {addTaskAC, removeTaskAC, tasksActionsReducer} from "./tasksActionsReducer";
+import {addTaskAC, removeTaskAC, tasksActionsReducer, TasksListType} from "./tasksActionsReducer";
 import {v1} from "uuid";
 import {removeListAC} from "./listsActionsReducer";
+import {TaskPriority, TaskStatus} from "../api/it-inc-api";
 
 let startState: TasksListType = {};
 let listID1: string = v1();
@@ -10,14 +10,44 @@ let listID2: string = v1();
 beforeEach(() => {
     startState = {
         [listID1]: [
-            {id: "1", title: "CSS", isDone: false},
-            {id: "2", title: "JS", isDone: true},
-            {id: "3", title: "React", isDone: false},
+            {
+                id: "1", title: "CSS",  status: TaskStatus.New,
+                order: 0, description: 'description', addedDate: '',
+                deadline: '', startDate: '', todoListId: listID1,
+                priority:TaskPriority.Someday,
+            },
+            {
+                id: "2", title: "JS", status: TaskStatus.Completed,
+                addedDate: '', order: 0, deadline: '',
+                description: '', priority: TaskPriority.Someday,
+                startDate: '', todoListId: listID1,
+            },
+            {
+                id: "3", title: "React", status: TaskStatus.New,
+                addedDate: '', order: 0, deadline: '',
+                description: '', priority: TaskPriority.Someday,
+                startDate: '', todoListId: listID1,
+            },
         ],
         [listID2]: [
-            {id: "1", title: "bread", isDone: false},
-            {id: "2", title: "milk", isDone: true},
-            {id: "3", title: "tea", isDone: false},
+            {
+                id: "1", title: "bread", status: TaskStatus.New,
+                addedDate: '', order: 0, deadline: '',
+                description: '', priority: TaskPriority.Someday,
+                startDate: '', todoListId: listID2,
+            },
+            {
+                id: "2", title: "milk", status: TaskStatus.Completed,
+                addedDate: '', order: 0, deadline: '',
+                description: '', priority: TaskPriority.Someday,
+                startDate: '', todoListId: listID2,
+            },
+            {
+                id: "3", title: "tea", status: TaskStatus.New,
+                addedDate: '', order: 0, deadline: '',
+                description: '', priority: TaskPriority.Someday,
+                startDate: '', todoListId: listID2,
+            },
         ],
     }
 })

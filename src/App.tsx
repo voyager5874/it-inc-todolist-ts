@@ -1,25 +1,17 @@
 import React, {useCallback} from 'react';
-import {TaskType, Todolist} from "./Todolist";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
-import {addListAC} from "./state/listsActionsReducer";
+import {addListAC, TodoListInAppType} from "./state/listsActionsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./state/store";
+import {Todolist} from "./Todolist";
 
-export type TasksFilterType = 'all' | 'completed' | 'active';
-export type TodolistType = {
-    id: string
-    title: string
-    activeFilter: TasksFilterType
-}
-export type TasksListType = {
-    [key: string]: Array<TaskType>
-}
+
 
 export const App = () => {
     console.log("app was called")
-    const todolists = useSelector<RootStateType, TodolistType[]>(state => state.lists);
+    const todolists = useSelector<RootStateType, TodoListInAppType[]>(state => state.lists);
     const dispatch = useDispatch()
 
     const addTodolist = useCallback((listName: string) => {
