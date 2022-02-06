@@ -1,5 +1,6 @@
 import {v1} from "uuid";
-import {TodoListOnServerType} from "../api/it-inc-api";
+import {backendAPI, TodoListOnServerType} from "../api/it-inc-api";
+import {Dispatch} from "redux";
 
 
 
@@ -34,13 +35,15 @@ export const listsActionsReducer = (state: Array<TodoListInAppType> = initialSta
                 ...list,
                 title: action.payload.newName
             } : list)
+        case "SET-LISTS":
+            return action.payload.lists.map(list=>({...list, activeFilter: 'all'}))
         default:
             return state
     }
 
 };
 
-type ListsActionsType = AddListActionType | RemoveListActionType | ChangeFilterActionType | ChangeListNameActionType
+type ListsActionsType = AddListActionType | RemoveListActionType | ChangeFilterActionType | ChangeListNameActionType | setListsActionType
 
 export type RemoveListActionType = ReturnType<typeof removeListAC>
 export const removeListAC = (listID: string) => {
@@ -84,3 +87,22 @@ export const changeListNameAC = (listID: string, newName: string) => {
         },
     } as const
 }
+
+export type setListsActionType = ReturnType<typeof setListsAC>
+export const setListsAC = (lists: Array<TodoListOnServerType>) => {
+    return {
+        type: 'SET-LISTS',
+        payload: {
+            lists,
+        },
+    } as const
+}
+
+
+export const fetchListsThunk = () => {
+    return (dispatch: Dispatch) => {
+    backendAPI.getTodoLists()
+        .then(response=>{
+            dispatch(setListsAC(response.data))
+        })
+}}

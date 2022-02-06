@@ -1,6 +1,7 @@
 import {v1} from "uuid";
-import {AddListActionType, RemoveListActionType, todolistID1, todolistID2} from "./listsActionsReducer";
-import {TaskPriority, TaskStatus, TaskType} from "../api/it-inc-api";
+import {AddListActionType, RemoveListActionType, setListsActionType} from "./listsActionsReducer";
+import {backendAPI, TaskPriority, TaskStatus, TaskType} from "../api/it-inc-api";
+import {Dispatch} from "redux";
 
 
 let initialState: TasksListType = {}
@@ -9,20 +10,6 @@ export type TasksListType = {
     [key: string]: Array<TaskType>
 }
 
-// let initialState: TasksListType = {
-//     [todolistID1]: [
-//         {id: v1(), title: "HTML&CSS", isDone: true},
-//         {id: v1(), title: "JS/TS", isDone: true},
-//         {id: v1(), title: "React", isDone: false},
-//         {id: v1(), title: "Redux", isDone: false},
-//     ],
-//     [todolistID2]: [
-//         {id: v1(), title: "HTML&CSS", isDone: true},
-//         {id: v1(), title: "JS/TS", isDone: true},
-//         {id: v1(), title: "React", isDone: false},
-//         {id: v1(), title: "Redux", isDone: false},
-//     ]
-// }
 
 export const tasksActionsReducer = (state: TasksListType = initialState, action: TasksActionsType): TasksListType => {
     switch (action.type) {
@@ -77,7 +64,15 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
                     title: action.payload.newName
                 } : task)
             }
+        case "SET-LISTS":
+            const stateCopy = {...state}
+            action.payload.lists.forEach(list => {
+                stateCopy[list.id] = []
+            })
+            return stateCopy
 
+        case "SET-TASKS":
+            return {...state, [action.payload.todoListID] : action.payload.tasks}
         default:
             return state
     }
@@ -91,6 +86,8 @@ type TasksActionsType =
     | ChangeTaskNameActionType
     | AddListActionType
     | RemoveListActionType
+    | setListsActionType
+    | setTasksActionType
 
 type AddTaskActionType = ReturnType<typeof addTaskAC>
 
@@ -145,4 +142,24 @@ export const changeTaskNameAC = (listID: string, taskID: string, newName: string
             newName,
         }
     } as const
+}
+
+type setTasksActionType = ReturnType<typeof setTasksAC>
+
+export const setTasksAC = (todoListID: string, tasks: Array<TaskType>) => {
+    return {
+        type: 'SET-TASKS',
+        payload: {
+            todoListID,
+            tasks,
+        },
+    } as const
+}
+
+export const fetchTasksTC = (todoListID: string) => {
+    return (dispatch: Dispatch) => {
+        backendAPI.getTasks(todoListID)
+            .then(response => dispatch(setTasksAC(todoListID, response.data.items)))
+    }
+
 }

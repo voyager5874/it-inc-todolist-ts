@@ -61,7 +61,7 @@ type GetTasksResponseType = {
 type UpdateTaskRequestBodyType = {
     title: string
     description: string
-    completed: boolean
+    //completed: boolean //not in use?
     status: number
     priority: number
     startDate: string
@@ -92,7 +92,7 @@ export const backendAPI = {
         const requestBody: UpdateTaskRequestBodyType = {
             title: newName,
             description: description,
-            completed: false,
+            // completed: false,
             status: 1,
             priority: 2,
             startDate: '2022-02-05T13:03:26.157',

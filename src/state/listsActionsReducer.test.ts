@@ -4,7 +4,7 @@ import {
     changeFilterAC,
     changeListNameAC,
     listsActionsReducer,
-    removeListAC, TasksFilterType, TodoListInAppType,
+    removeListAC, setListsAC, TasksFilterType, TodoListInAppType,
 } from "./listsActionsReducer";
 
 
@@ -49,3 +49,9 @@ test('correct filter of todolist should be changed', () => {
     expect(endState[1].activeFilter).toBe(newFilter);
 });
 
+test('received todo lists should be set to the state', () => {
+
+    const action = setListsAC(startState);
+    const endState = listsActionsReducer([], action);
+    expect(endState.length).toBe(2);
+});
