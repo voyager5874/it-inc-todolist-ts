@@ -35,13 +35,13 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
             setError(true)
         }
 
-    }, [])
+    }, [inputText])
 
     const enterPressHandler = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             saveNewName()
         }
-    }, [])
+    }, [saveNewName])
 
     return (
         editMode ?

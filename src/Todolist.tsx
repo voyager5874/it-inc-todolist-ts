@@ -6,8 +6,8 @@ import {Delete} from "@material-ui/icons";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./state/store";
-import {addTaskAC, changeTaskNameAC, changeTaskStatusAC, fetchTasksTC, removeTaskAC} from "./state/tasksActionsReducer";
-import {changeFilterAC, changeListNameAC, removeListAC, TasksFilterType} from "./state/listsActionsReducer";
+import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from "./state/tasksActionsReducer";
+import {changeFilterAC, changeListNameTC, removeListTC, TasksFilterType} from "./state/listsActionsReducer";
 import {Task} from "./Task";
 import {TaskStatus, TaskType} from "./api/it-inc-api";
 
@@ -37,7 +37,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 
     useEffect(()=>{
         dispatch(fetchTasksTC(props.todolistID))
-    }, [])
+    }, [dispatch, props.todolistID])
 
     let filteredTasks = tasks
     if (props.activeFilter === 'active') {
@@ -48,15 +48,15 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     }
 
     const changeTaskStatus = useCallback((taskID: string, newStatus: TaskStatus) => {
-        dispatch(changeTaskStatusAC(props.todolistID, taskID, newStatus))
+        dispatch(updateTaskTC(props.todolistID, taskID, {status: newStatus}))
     }, [dispatch, props.todolistID])
 
     const addTask = useCallback((name: string) => {
-        dispatch(addTaskAC(props.todolistID, name))
-    }, [props.todolistID])
+        dispatch(addTaskTC(props.todolistID, name))
+    }, [dispatch, props.todolistID])
 
     const removeTask = useCallback((taskID: string) => {
-        dispatch(removeTaskAC(props.todolistID, taskID))
+        dispatch(removeTaskTC(props.todolistID, taskID))
     }, [dispatch, props.todolistID])
 
     const changeFilter = useCallback((newFilterValue: TasksFilterType) => {
@@ -64,16 +64,16 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     }, [dispatch, props.todolistID])
 
     const deleteTodolist = useCallback(() => {
-        let action = removeListAC(props.todolistID)
+        let action = removeListTC(props.todolistID)
         dispatch(action)
     }, [dispatch, props.todolistID])
 
     const changeTaskName = useCallback((taskID: string, newName: string) => {
-        dispatch(changeTaskNameAC(props.todolistID, taskID, newName))
+        dispatch(updateTaskTC(props.todolistID, taskID, {title: newName}))
     }, [dispatch, props.todolistID])
 
     const changeListName = useCallback((newName: string) => {
-        dispatch(changeListNameAC(props.todolistID, newName))
+        dispatch(changeListNameTC(props.todolistID, newName))
     }, [dispatch, props.todolistID])
 
 

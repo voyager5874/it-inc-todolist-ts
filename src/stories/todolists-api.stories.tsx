@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react'
-import axios from 'axios'
+import React, {useState} from 'react'
 import ReactJson from "react-json-view";
-import {backendAPI} from "../api/it-inc-api";
+import {backendAPI, TaskPriority, TaskStatus, putRequestBodyType} from "../api/it-inc-api";
 
 export default { //for storybook
     title: 'API'
@@ -84,7 +83,16 @@ export const RequestsMiniApp = () => {
 
     const changeTaskName = () => {
         if(chosenTodoListID && chosenTaskID && taskNameToCreate && taskDescription){
-            backendAPI.updateTask(chosenTodoListID, chosenTaskID, taskNameToCreate, taskDescription)
+            const requestPayload: putRequestBodyType = {
+                title: taskNameToCreate,
+                description: taskDescription,
+                status: TaskStatus.New,
+                priority: TaskPriority.Low,
+                startDate: '2022-02-05T13:03:26.157',
+                deadline: '2022-02-10T13:03:26.157',
+            }
+
+            backendAPI.updateTask(chosenTodoListID, chosenTaskID, requestPayload)
                 .then(response=>setResponse(response))
                 .then(getTasksFromServer)
         }

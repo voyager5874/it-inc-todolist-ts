@@ -2,12 +2,10 @@ import React, {useCallback, useEffect} from 'react';
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
-import {addListAC, fetchListsThunk, setListsAC, TodoListInAppType} from "./state/listsActionsReducer";
+import {addListTC, fetchListsThunk, TodoListInAppType} from "./state/listsActionsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./state/store";
 import {Todolist} from "./Todolist";
-import {backendAPI} from "./api/it-inc-api";
-
 
 
 export const App = () => {
@@ -18,12 +16,11 @@ export const App = () => {
 
     useEffect(()=>{
         dispatch(fetchListsThunk())
-    },[])
+    },[dispatch])
 
     const addTodolist = useCallback((listName: string) => {
         if (listName) {
-            let action = addListAC(listName)
-            dispatch(action)
+            dispatch(addListTC(listName))
         }
     }, [dispatch])
 

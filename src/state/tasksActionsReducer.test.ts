@@ -11,10 +11,10 @@ beforeEach(() => {
     startState = {
         [listID1]: [
             {
-                id: "1", title: "CSS",  status: TaskStatus.New,
+                id: "1", title: "CSS", status: TaskStatus.New,
                 order: 0, description: 'description', addedDate: '',
                 deadline: '', startDate: '', todoListId: listID1,
-                priority:TaskPriority.Someday,
+                priority: TaskPriority.Someday,
             },
             {
                 id: "2", title: "JS", status: TaskStatus.Completed,
@@ -62,7 +62,13 @@ test('correct task from correct array deleted', () => {
 });
 
 test("task with given name added to correct list", () => {
-    const action = addTaskAC(listID2, "juice");
+    const newTask = {
+        id: "999", title: "newTask", status: TaskStatus.New,
+        order: 0, description: 'newTask for test addTaskAC', addedDate: '',
+        deadline: '', startDate: '', todoListId: listID2,
+        priority: TaskPriority.Someday,
+    }
+    const action = addTaskAC(listID2, newTask);
     const endState = tasksActionsReducer(startState, action);
     expect(endState[listID1].length).toBe(3);
     expect(endState[listID2].length).toBe(4);
@@ -77,10 +83,10 @@ test('property with given todolistId should be deleted', () => {
 });
 
 
-test('empty array should be added for each todo list',()=>{
+test('empty array should be added for each todo list', () => {
     const action = setListsAC([
-        {id: 'todolistId1', title: "What to learn", order: 0, addedDate:''},
-        {id: 'todolistId2', title: "What to buy", order: 0, addedDate:''},
+        {id: 'todolistId1', title: "What to learn", order: 0, addedDate: ''},
+        {id: 'todolistId2', title: "What to buy", order: 0, addedDate: ''},
     ])
     const endState = tasksActionsReducer({}, action)
     const keys = Object.keys(endState)
@@ -89,9 +95,9 @@ test('empty array should be added for each todo list',()=>{
     expect(endState['todolistId2']).toStrictEqual([])
 });
 
-test('tasks should be added for determined list',()=>{
+test('tasks should be added for determined list', () => {
     const action = setTasksAC(listID1, startState[listID1])
-    const endState = tasksActionsReducer({[listID1]:[], [listID2]:[]}, action)
+    const endState = tasksActionsReducer({[listID1]: [], [listID2]: []}, action)
     expect(endState[listID1].length).toBe(3)
     expect(endState[listID2].length).toBe(0)
 });

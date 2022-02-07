@@ -18,15 +18,13 @@ export const AddItemForm = React.memo((props: addItemFormPropsType) => {
     const [inputError, setInputError] = useState<boolean>(false)
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        debugger
         if (inputError) {
             setInputError(false)
         }
         setInputText(event.currentTarget.value)
     }
 
-    const addItem = () => {
-        debugger
+    const addItem = useCallback(() => {
         const cleanString = inputText.trim()
         if (cleanString) {
             props.addItemCallback(cleanString)
@@ -34,13 +32,13 @@ export const AddItemForm = React.memo((props: addItemFormPropsType) => {
             setInputError(true)
         }
         setInputText('')
-    }
+    },[inputText, props.addItemCallback])
 
     const keyPressWithinInputHandler = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             addItem()
         }
-    }, [])
+    }, [addItem])
 
 
     return (

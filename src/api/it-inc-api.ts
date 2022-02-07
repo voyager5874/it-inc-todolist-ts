@@ -58,12 +58,11 @@ type GetTasksResponseType = {
     totalCount: number
 }
 
-type UpdateTaskRequestBodyType = {
+export type putRequestBodyType = {
     title: string
     description: string
-    //completed: boolean //not in use?
-    status: number
-    priority: number
+    status: TaskStatus
+    priority: TaskPriority
     startDate: string
     deadline: string
 }
@@ -88,17 +87,9 @@ export const backendAPI = {
     getTasks(todolistID: string) {
         return instance.get<GetTasksResponseType>(`todo-lists/${todolistID}/tasks`)
     },
-    updateTask(todolistID: string, taskID: string, newName: string, description: string) {
-        const requestBody: UpdateTaskRequestBodyType = {
-            title: newName,
-            description: description,
-            // completed: false,
-            status: 1,
-            priority: 2,
-            startDate: '2022-02-05T13:03:26.157',
-            deadline: '2022-02-10T13:03:26.157',
-        }
-        return instance.put<BaseResponseType<{ item: TaskType }>>(`todo-lists/${todolistID}/tasks/${taskID}`, requestBody)
+    // updateTask(todolistID: string, taskID: string, newName: string, description: string, newStatus: TaskStatus) {
+    updateTask(todolistID: string, taskID: string, requestPayload: putRequestBodyType) {
+        return instance.put<BaseResponseType<{ item: TaskType }>>(`todo-lists/${todolistID}/tasks/${taskID}`, requestPayload)
     },
     deleteTask(todolistID: string, taskID: string) {
         return instance.delete<BaseResponseType>(`/todo-lists/${todolistID}/tasks/${taskID}`)

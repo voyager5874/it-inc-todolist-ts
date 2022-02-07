@@ -1,7 +1,7 @@
-import {v1} from "uuid";
 import {AddListActionType, RemoveListActionType, setListsActionType} from "./listsActionsReducer";
-import {backendAPI, TaskPriority, TaskStatus, TaskType} from "../api/it-inc-api";
+import {backendAPI, TaskPriority, TaskStatus, TaskType, putRequestBodyType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
+import {RootStateType} from "./store";
 
 
 let initialState: TasksListType = {}
@@ -15,20 +15,11 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
     switch (action.type) {
 
         case 'ADD-TASK':
+            // action.payload.task.todoListId - where should I get the value ?
+            //new task always on top after app reload - is it server determined?
             return {
                 ...state,
-                [action.payload.listID]: [...state[action.payload.listID], {
-                    id: v1(),
-                    title: action.payload.title,
-                    status: TaskStatus.New,
-                    todoListId: action.payload.listID,
-                    priority: TaskPriority.Someday,
-                    startDate: '',
-                    deadline: '',
-                    addedDate: '',
-                    order: 0,
-                    description: 'description',
-                }]
+                [action.payload.listID]: [action.payload.task, ...state[action.payload.listID]]
             }
 
         case 'REMOVE-TASK':
@@ -37,17 +28,11 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
                 [action.payload.listID]: state[action.payload.listID].filter(task => task.id !== action.payload.taskID)
             }
 
-        case 'CHANGE-TASK-STATUS':
-            return {
-                ...state,
-                [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {
-                    ...task,
-                    status: action.payload.status
-                } : task)
-            }
+        case "UPDATE-TASK-DATA":
+            return {...state, [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {...task, ...action.payload.newData} : task)}
 
         case 'ADD-LIST':
-            return {...state, [action.payload.listID]: []}
+            return {...state, [action.payload.todoList.id]: []}
 
         case 'REMOVE-LIST': {
             debugger
@@ -56,14 +41,6 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
             return stateCopy
         }
 
-        case 'CHANGE-TASK-NAME':
-            return {
-                ...state,
-                [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {
-                    ...task,
-                    title: action.payload.newName
-                } : task)
-            }
         case "SET-LISTS":
             const stateCopy = {...state}
             action.payload.lists.forEach(list => {
@@ -72,7 +49,7 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
             return stateCopy
 
         case "SET-TASKS":
-            return {...state, [action.payload.todoListID] : action.payload.tasks}
+            return {...state, [action.payload.todoListID]: action.payload.tasks}
         default:
             return state
     }
@@ -82,22 +59,20 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
 type TasksActionsType =
     AddTaskActionType
     | RemoveTaskActionType
-    | ChangeTaskStatusActionType
-    | ChangeTaskNameActionType
     | AddListActionType
     | RemoveListActionType
     | setListsActionType
     | setTasksActionType
+    | UpdateTaskDataActionType
 
 type AddTaskActionType = ReturnType<typeof addTaskAC>
 
-export const addTaskAC = (listID: string, title: string) => {
-    //preparation code
+export const addTaskAC = (listID: string, task: TaskType) => {
     return {
         type: 'ADD-TASK',
         payload: {
-            title: title,
-            listID: listID,
+            listID,
+            task,
         }
     } as const
 }
@@ -105,7 +80,6 @@ export const addTaskAC = (listID: string, title: string) => {
 type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 
 export const removeTaskAC = (listID: string, taskID: string) => {
-    //preparation code
     return {
         type: 'REMOVE-TASK',
         payload: {
@@ -115,31 +89,15 @@ export const removeTaskAC = (listID: string, taskID: string) => {
     } as const
 }
 
-type ChangeTaskStatusActionType = ReturnType<typeof changeTaskStatusAC>
+type UpdateTaskDataActionType = ReturnType<typeof updateTaskDataAC>
 
-export const changeTaskStatusAC = (listID: string, taskID: string, newStatus: TaskStatus) => {
-    //preparation code
+export const updateTaskDataAC = (listID: string, taskID: string, newData: UpdateTaskDataType) => {
     return {
-        type: 'CHANGE-TASK-STATUS',
-        payload: {
-            listID: listID,
-            taskID: taskID,
-            status: newStatus,
-        }
-    } as const
-}
-
-
-type ChangeTaskNameActionType = ReturnType<typeof changeTaskNameAC>
-
-export const changeTaskNameAC = (listID: string, taskID: string, newName: string) => {
-    //preparation code
-    return {
-        type: 'CHANGE-TASK-NAME',
+        type: 'UPDATE-TASK-DATA',
         payload: {
             listID,
             taskID,
-            newName,
+            newData,
         }
     } as const
 }
@@ -162,4 +120,58 @@ export const fetchTasksTC = (todoListID: string) => {
             .then(response => dispatch(setTasksAC(todoListID, response.data.items)))
     }
 
+}
+
+export const removeTaskTC = (listID: string, taskID: string) => {
+    return (dispatch: Dispatch) => {
+        backendAPI.deleteTask(listID, taskID)
+            .then(response => {
+                dispatch(removeTaskAC(listID, taskID))
+            })
+    }
+}
+
+export const addTaskTC = (listID: string, taskName: string) => {
+    return (dispatch: Dispatch) => {
+        backendAPI.createTask(listID, taskName)
+            .then(response => {
+                dispatch(addTaskAC(listID, response.data.data.item))
+            })
+    }
+}
+
+export type UpdateTaskDataType = {
+    title?: string
+    description?: string
+    status?: TaskStatus
+    priority?: TaskPriority
+    startDate?: string
+    deadline?: string
+}
+
+export const updateTaskTC = (listID: string, taskID: string, newTaskData: UpdateTaskDataType) => {
+
+    return (dispatch: Dispatch, getState: () => RootStateType) => {
+        const currentState = getState()
+        const taskToBeChanged = currentState.tasks[listID].find(task => task.id === taskID)
+
+        if (!taskToBeChanged) {
+            console.warn(`task with id ${taskID} not found in todo list ${listID}`)
+            return
+        }
+
+        const requestPayload: putRequestBodyType = {
+            deadline: taskToBeChanged.deadline,
+            description: taskToBeChanged.description,
+            priority: taskToBeChanged.priority,
+            startDate: taskToBeChanged.startDate,
+            status: taskToBeChanged.status,
+            title: taskToBeChanged.title,
+            ...newTaskData,
+        }
+        backendAPI.updateTask(listID, taskID, requestPayload)
+            .then(response => {
+                dispatch(updateTaskDataAC(listID, taskID, newTaskData))
+            })
+    }
 }

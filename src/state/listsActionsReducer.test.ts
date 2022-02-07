@@ -6,6 +6,7 @@ import {
     listsActionsReducer,
     removeListAC, setListsAC, TasksFilterType, TodoListInAppType,
 } from "./listsActionsReducer";
+import {TodoListOnServerType} from "../api/it-inc-api";
 
 
 let startState: TodoListInAppType[] = [];
@@ -27,10 +28,10 @@ test('correct todolist should be removed', () => {
 });
 
 test('correct todolist should be added', () => {
-    let newTodolistTitle = "New Todolist";
-    const endState = listsActionsReducer(startState, addListAC(newTodolistTitle));
+    const newTodolist: TodoListOnServerType= {id:todolistId1, title: 'test addListAC',order: 0, addedDate: ''}
+    const endState = listsActionsReducer(startState, addListAC(newTodolist));
     expect(endState.length).toBe(3);
-    expect(endState[2].title).toBe(newTodolistTitle);
+    expect(endState[0].title).toBe('test addListAC');
 });
 
 test('correct todolist should change its name', () => {

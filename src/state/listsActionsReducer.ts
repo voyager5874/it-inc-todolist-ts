@@ -1,10 +1,8 @@
-import {v1} from "uuid";
 import {backendAPI, TodoListOnServerType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
 
 
-
-export type TasksFilterType = 'all' | 'completed' | 'active';
+export type TasksFilterType = 'all' | 'completed' | 'active'
 
 export type TodoListInAppType = TodoListOnServerType & {
     activeFilter: TasksFilterType
@@ -12,17 +10,13 @@ export type TodoListInAppType = TodoListOnServerType & {
 
 let initialState: Array<TodoListInAppType> = []
 
-export const todolistID1 = v1()
-export const todolistID2 = v1()
-// let initialState: Array<TodolistType> = [
-//     {id: todolistID1, title: "What  to learn", activeFilter: 'all'},
-//     {id: todolistID2, title: "What  to buy", activeFilter: 'all'},
-// ]
 
 export const listsActionsReducer = (state: Array<TodoListInAppType> = initialState, action: ListsActionsType): Array<TodoListInAppType> => {
     switch (action.type) {
-        case 'ADD-LIST':
-            return [...state, {id: action.payload.listID, title: action.payload.name, activeFilter: 'all', addedDate: '', order: 0}]
+        case 'ADD-LIST': {
+            const newInAppList: TodoListInAppType = {...action.payload.todoList, activeFilter: 'all'}
+            return [newInAppList, ...state]
+        }
         case 'REMOVE-LIST':
             return state.filter(list => list.id !== action.payload.listID)
         case 'CHANGE-FILTER':
@@ -36,14 +30,19 @@ export const listsActionsReducer = (state: Array<TodoListInAppType> = initialSta
                 title: action.payload.newName
             } : list)
         case "SET-LISTS":
-            return action.payload.lists.map(list=>({...list, activeFilter: 'all'}))
+            return action.payload.lists.map(list => ({...list, activeFilter: 'all'}))
         default:
             return state
     }
 
 };
 
-type ListsActionsType = AddListActionType | RemoveListActionType | ChangeFilterActionType | ChangeListNameActionType | setListsActionType
+type ListsActionsType =
+    AddListActionType
+    | RemoveListActionType
+    | ChangeFilterActionType
+    | ChangeListNameActionType
+    | setListsActionType
 
 export type RemoveListActionType = ReturnType<typeof removeListAC>
 export const removeListAC = (listID: string) => {
@@ -56,12 +55,11 @@ export const removeListAC = (listID: string) => {
 }
 
 export type AddListActionType = ReturnType<typeof addListAC>
-export const addListAC = (name: string) => {
+export const addListAC = (todoList: TodoListOnServerType) => {
     return {
         type: 'ADD-LIST',
         payload: {
-            name: name,
-            listID: v1(),
+            todoList,
         },
     } as const
 }
@@ -101,8 +99,34 @@ export const setListsAC = (lists: Array<TodoListOnServerType>) => {
 
 export const fetchListsThunk = () => {
     return (dispatch: Dispatch) => {
-    backendAPI.getTodoLists()
-        .then(response=>{
-            dispatch(setListsAC(response.data))
-        })
-}}
+        backendAPI.getTodoLists()
+            .then(response => {
+                dispatch(setListsAC(response.data))
+            })
+    }
+}
+
+export const removeListTC = (listID: string) => {
+    return (dispatch: Dispatch) => {
+        backendAPI.deleteTodoList(listID)
+            .then(response=> dispatch(removeListAC(listID)))
+    }
+}
+
+export const addListTC = (name: string) => {
+    return (dispatch: Dispatch) => {
+     backendAPI.createTodoList(name)
+         .then(response => {
+             dispatch(addListAC(response.data.data.item))
+         })
+    }
+}
+
+export const changeListNameTC = (listID: string, newName: string) => {
+    return (dispatch: Dispatch) => {
+        backendAPI.updateTodoList(listID, newName)
+            .then(response => {
+                dispatch(changeListNameAC(listID, newName))
+            })
+    }
+}
