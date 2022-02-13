@@ -58,7 +58,7 @@ type GetTasksResponseType = {
     totalCount: number
 }
 
-export type putRequestBodyType = {
+export type taskPutRequestBodyType = {
     title: string
     description: string
     status: TaskStatus
@@ -87,8 +87,7 @@ export const backendAPI = {
     getTasks(todolistID: string) {
         return instance.get<GetTasksResponseType>(`todo-lists/${todolistID}/tasks`)
     },
-    // updateTask(todolistID: string, taskID: string, newName: string, description: string, newStatus: TaskStatus) {
-    updateTask(todolistID: string, taskID: string, requestPayload: putRequestBodyType) {
+    updateTask(todolistID: string, taskID: string, requestPayload: taskPutRequestBodyType) {
         return instance.put<BaseResponseType<{ item: TaskType }>>(`todo-lists/${todolistID}/tasks/${taskID}`, requestPayload)
     },
     deleteTask(todolistID: string, taskID: string) {

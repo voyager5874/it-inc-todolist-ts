@@ -1,5 +1,5 @@
 import {AddListActionType, RemoveListActionType, setListsActionType} from "./listsActionsReducer";
-import {backendAPI, TaskPriority, TaskStatus, TaskType, putRequestBodyType} from "../api/it-inc-api";
+import {backendAPI, TaskType, taskPutRequestBodyType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
 import {RootStateType} from "./store";
 
@@ -29,10 +29,11 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
             }
 
         case "UPDATE-TASK-DATA":
-            return {...state, [action.payload.listID]: state[action.payload.listID].map(task => task.id === action.payload.taskID ? {...task, ...action.payload.newData} : task)}
+            return {...state, [action.payload.listID]: state[action.payload.listID]
+                    .map(task => task.id === action.payload.taskID ? {...task, ...action.payload.newData} : task)}
 
-        case 'ADD-LIST':
-            return {...state, [action.payload.todoList.id]: []}
+        // case 'ADD-LIST':
+        //     return {...state, [action.payload.todoList.id]: []}
 
         case 'REMOVE-LIST': {
             debugger
@@ -40,13 +41,13 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
             delete stateCopy[action.payload.listID]
             return stateCopy
         }
-
-        case "SET-LISTS":
-            const stateCopy = {...state}
-            action.payload.lists.forEach(list => {
-                stateCopy[list.id] = []
-            })
-            return stateCopy
+        //I've used (tasks || []).map... expression in Todolist JSX, so there's no need in setting empty arrays in this reducer
+        // case "SET-LISTS":
+        //     const stateCopy = {...state}
+        //     action.payload.lists.forEach(list => {
+        //         stateCopy[list.id] = []
+        //     })
+        //     return stateCopy
 
         case "SET-TASKS":
             return {...state, [action.payload.todoListID]: action.payload.tasks}
@@ -140,14 +141,17 @@ export const addTaskTC = (listID: string, taskName: string) => {
     }
 }
 
-export type UpdateTaskDataType = {
-    title?: string
-    description?: string
-    status?: TaskStatus
-    priority?: TaskPriority
-    startDate?: string
-    deadline?: string
-}
+// export type UpdateTaskDataType = {
+//     title?: string
+//     description?: string
+//     status?: TaskStatus
+//     priority?: TaskPriority
+//     startDate?: string
+//     deadline?: string
+// }
+//"partial" makes all properties optional, so we get the same result as UpdateTaskDataType above
+//no need to create one more data type
+type UpdateTaskDataType = Partial<taskPutRequestBodyType>
 
 export const updateTaskTC = (listID: string, taskID: string, newTaskData: UpdateTaskDataType) => {
 
@@ -160,7 +164,7 @@ export const updateTaskTC = (listID: string, taskID: string, newTaskData: Update
             return
         }
 
-        const requestPayload: putRequestBodyType = {
+        const requestPayload: taskPutRequestBodyType = {
             deadline: taskToBeChanged.deadline,
             description: taskToBeChanged.description,
             priority: taskToBeChanged.priority,
@@ -169,6 +173,13 @@ export const updateTaskTC = (listID: string, taskID: string, newTaskData: Update
             title: taskToBeChanged.title,
             ...newTaskData,
         }
+
+        // type TodoPreview = Omit<Todo, "addedDate">;
+        // type TodoPreview = Pick<TaskType, "deadline" | "description" | "priority" | "startDate" | "status"  |"title">
+        //is there a way to "filter" task properties and create object for put request body automatically?
+        //let clone = Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj));
+        // debugger
+
         backendAPI.updateTask(listID, taskID, requestPayload)
             .then(response => {
                 dispatch(updateTaskDataAC(listID, taskID, newTaskData))

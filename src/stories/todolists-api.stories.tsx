@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import ReactJson from "react-json-view";
-import {backendAPI, TaskPriority, TaskStatus, putRequestBodyType} from "../api/it-inc-api";
+import {backendAPI, TaskPriority, TaskStatus, taskPutRequestBodyType} from "../api/it-inc-api";
 
 export default { //for storybook
     title: 'API'
@@ -83,7 +83,7 @@ export const RequestsMiniApp = () => {
 
     const changeTaskName = () => {
         if(chosenTodoListID && chosenTaskID && taskNameToCreate && taskDescription){
-            const requestPayload: putRequestBodyType = {
+            const requestPayload: taskPutRequestBodyType = {
                 title: taskNameToCreate,
                 description: taskDescription,
                 status: TaskStatus.New,

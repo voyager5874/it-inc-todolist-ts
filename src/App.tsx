@@ -1,6 +1,16 @@
 import React, {useCallback, useEffect} from 'react';
 import {AddItemForm} from "./AddItemForm";
-import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
+import {
+    AppBar,
+    Button,
+    Container,
+    Grid,
+    IconButton,
+    LinearProgress,
+    Paper,
+    Toolbar,
+    Typography
+} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {addListTC, fetchListsThunk, TodoListInAppType} from "./state/listsActionsReducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -36,6 +46,7 @@ export const App = () => {
                     </Typography>
                     <Button color="inherit" variant={"outlined"}>Login</Button>
                 </Toolbar>
+                <LinearProgress color="secondary"/>
             </AppBar>
             <Container fixed>
                 <Grid container style={{paddingTop: "20px"}}>

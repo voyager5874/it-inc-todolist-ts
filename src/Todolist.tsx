@@ -88,7 +88,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
             <AddItemForm addItemCallback={addTask}/>
             <List disablePadding>
                 {
-                    filteredTasks.map(task =>
+                    (filteredTasks || []).map(task =>
                         <ListItem disableGutters key={task.id}
                                   style={{justifyContent: "space-between"}}
                         >
