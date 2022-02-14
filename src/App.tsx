@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {AddItemForm} from "./AddItemForm";
+import {AddItemForm} from "./components/AddItemForm";
 import {
     AppBar,
     Button,
@@ -12,20 +12,23 @@ import {
     Typography
 } from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
-import {addListTC, fetchListsThunk, TodoListInAppType} from "./state/listsActionsReducer";
+import {addListTC, fetchListsTC, TodoListInAppType} from "./state/listsActionsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./state/store";
-import {Todolist} from "./Todolist";
+import {Todolist} from "./components/Todolist";
+import {ErrorSnackbar} from "./components/ErrorSnackbar";
+import {AppStatusType} from "./state/appReducer";
 
 
 export const App = () => {
     console.log("app was called")
     const todolists = useSelector<RootStateType, TodoListInAppType[]>(state => state.lists);
+    const appStatus = useSelector<RootStateType, AppStatusType>(state => state.app.status)
     const dispatch = useDispatch()
 
 
     useEffect(()=>{
-        dispatch(fetchListsThunk())
+        dispatch(fetchListsTC())
     },[dispatch])
 
     const addTodolist = useCallback((listName: string) => {
@@ -36,6 +39,7 @@ export const App = () => {
 
     return (
         <div>
+            <ErrorSnackbar/>
             <AppBar position="static">
                 <Toolbar style={{justifyContent: "space-between"}}>
                     <IconButton edge="start" color="inherit" aria-label="menu">
@@ -46,7 +50,7 @@ export const App = () => {
                     </Typography>
                     <Button color="inherit" variant={"outlined"}>Login</Button>
                 </Toolbar>
-                <LinearProgress color="secondary"/>
+                {appStatus === 'loading' && < LinearProgress color="secondary"/>}
             </AppBar>
             <Container fixed>
                 <Grid container style={{paddingTop: "20px"}}>

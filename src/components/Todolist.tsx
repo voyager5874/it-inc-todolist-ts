@@ -5,11 +5,11 @@ import {Button, IconButton, List, ListItem} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {RootStateType} from "./state/store";
-import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from "./state/tasksActionsReducer";
-import {changeFilterAC, changeListNameTC, removeListTC, TasksFilterType} from "./state/listsActionsReducer";
+import {RootStateType} from "../state/store";
+import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from "../state/tasksActionsReducer";
+import {changeFilterAC, changeListNameTC, removeListTC, TasksFilterType} from "../state/listsActionsReducer";
 import {Task} from "./Task";
-import {TaskStatus, TaskType} from "./api/it-inc-api";
+import {TaskStatus, TaskType} from "../api/it-inc-api";
 
 
 type TodolistPropsType = {

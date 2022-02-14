@@ -5,7 +5,7 @@ import {
     changeListNameAC,
     listsActionsReducer,
     removeListAC, setListsAC, TasksFilterType, TodoListInAppType,
-} from "./listsActionsReducer";
+} from "../state/listsActionsReducer";
 import {TodoListOnServerType} from "../api/it-inc-api";
 
 

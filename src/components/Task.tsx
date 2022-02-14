@@ -3,7 +3,7 @@ import {Checkbox, IconButton} from "@material-ui/core";
 import {EditableSpan} from "./EditableSpan";
 import {Backspace} from "@material-ui/icons";
 import styled from "styled-components";
-import {TaskStatus} from "./api/it-inc-api";
+import {TaskStatus} from "../api/it-inc-api";
 
 type TaskPropsType = {
     // listID: string

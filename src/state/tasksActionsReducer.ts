@@ -2,6 +2,7 @@ import {AddListActionType, RemoveListActionType, setListsActionType} from "./lis
 import {backendAPI, TaskType, taskPutRequestBodyType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
 import {RootStateType} from "./store";
+import {setAppErrorAC, setAppStatusAC} from "./appReducer";
 
 
 let initialState: TasksListType = {}
@@ -117,8 +118,12 @@ export const setTasksAC = (todoListID: string, tasks: Array<TaskType>) => {
 
 export const fetchTasksTC = (todoListID: string) => {
     return (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
         backendAPI.getTasks(todoListID)
-            .then(response => dispatch(setTasksAC(todoListID, response.data.items)))
+            .then(response => {
+                dispatch(setTasksAC(todoListID, response.data.items))
+                dispatch(setAppStatusAC('succeeded'))
+            })
     }
 
 }
@@ -134,9 +139,22 @@ export const removeTaskTC = (listID: string, taskID: string) => {
 
 export const addTaskTC = (listID: string, taskName: string) => {
     return (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
         backendAPI.createTask(listID, taskName)
             .then(response => {
-                dispatch(addTaskAC(listID, response.data.data.item))
+                if(response.data.resultCode === 0){
+                    dispatch(addTaskAC(listID, response.data.data.item))
+                    dispatch(setAppStatusAC('succeeded'))
+
+                }
+                else if(response.data.messages.length){
+                    dispatch(setAppErrorAC(response.data.messages[0]))
+                }
+                else{
+                    dispatch(setAppErrorAC('some error occurred'))
+                }
+                dispatch(setAppStatusAC('failed'))
+
             })
     }
 }

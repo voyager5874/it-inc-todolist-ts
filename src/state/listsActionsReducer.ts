@@ -1,5 +1,6 @@
 import {backendAPI, TodoListOnServerType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
+import {setAppStatusAC} from "./appReducer";
 
 
 export type TasksFilterType = 'all' | 'completed' | 'active'
@@ -97,11 +98,13 @@ export const setListsAC = (lists: Array<TodoListOnServerType>) => {
 }
 
 
-export const fetchListsThunk = () => {
+export const fetchListsTC = () => {
     return (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
         backendAPI.getTodoLists()
             .then(response => {
                 dispatch(setListsAC(response.data))
+                dispatch(setAppStatusAC('succeeded'))
             })
     }
 }
@@ -115,9 +118,11 @@ export const removeListTC = (listID: string) => {
 
 export const addListTC = (name: string) => {
     return (dispatch: Dispatch) => {
-     backendAPI.createTodoList(name)
+        dispatch(setAppStatusAC('loading'))
+        backendAPI.createTodoList(name)
          .then(response => {
              dispatch(addListAC(response.data.data.item))
+             dispatch(setAppStatusAC('succeeded'))
          })
     }
 }

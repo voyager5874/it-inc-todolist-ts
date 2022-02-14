@@ -1,5 +1,5 @@
-import {addListAC, listsActionsReducer, TodoListInAppType} from "./listsActionsReducer";
-import {tasksActionsReducer, TasksListType} from "./tasksActionsReducer";
+import {addListAC, listsActionsReducer, TodoListInAppType} from "../state/listsActionsReducer";
+import {tasksActionsReducer, TasksListType} from "../state/tasksActionsReducer";
 import {TodoListOnServerType} from "../api/it-inc-api";
 
 
