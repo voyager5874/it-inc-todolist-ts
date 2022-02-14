@@ -17,17 +17,23 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./state/store";
 import {Todolist} from "./components/Todolist";
 import {ErrorSnackbar} from "./components/ErrorSnackbar";
-import {AppStatusType} from "./state/appReducer";
+import {EntityStatusType} from "./state/appReducer";
 
 
-export const App = () => {
+type AppPropsType = {
+   demo?: boolean
+}
+
+
+export const App = ({demo = false, ...props}: AppPropsType) => {
     console.log("app was called")
     const todolists = useSelector<RootStateType, TodoListInAppType[]>(state => state.lists);
-    const appStatus = useSelector<RootStateType, AppStatusType>(state => state.app.status)
+    const appStatus = useSelector<RootStateType, EntityStatusType>(state => state.app.appStatus)
     const dispatch = useDispatch()
 
 
     useEffect(()=>{
+        if(demo) return
         dispatch(fetchListsTC())
     },[dispatch])
 
@@ -63,6 +69,8 @@ export const App = () => {
                                 <Grid item key={list.id}>
                                     <Paper style={{padding: "20px"}} elevation={10}>
                                         <Todolist
+                                            demo={demo}
+                                            listStatus={list.entityStatus}
                                             todolistID={list.id}
                                             title={list.title}
                                             activeFilter={list.activeFilter}

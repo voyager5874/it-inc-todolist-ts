@@ -3,18 +3,20 @@ import {TextField} from "@material-ui/core";
 
 
 type EditableSpanPropsType = {
+    disabled?: boolean
     itemName: string
     itemNameChangedCallback: (newName: string) => void
 }
 
 
-export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
+export const EditableSpan = React.memo(({disabled = false, ...props}: EditableSpanPropsType) => {
     console.log(`editableSpan was called, text: ${props.itemName}`)
     const [editMode, setEditMode] = useState<boolean>(false)
     const [inputText, setInputText] = useState('')
     const [error, setError] = useState<boolean>(false)
 
     const itemDoubleClickHandler = () => {
+        if(disabled) return
         setEditMode(true)
         setInputText(props.itemName)
     }
@@ -46,6 +48,7 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
     return (
         editMode ?
             <TextField
+                // disabled={disabled}
                 error={Boolean(error)}
                 helperText={error}
                 onKeyPress={enterPressHandler}

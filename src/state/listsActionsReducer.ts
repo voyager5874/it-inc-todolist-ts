@@ -1,12 +1,13 @@
 import {backendAPI, TodoListOnServerType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
-import {setAppStatusAC} from "./appReducer";
+import {EntityStatusType, setAppStatusAC} from "./appReducer";
 
 
 export type TasksFilterType = 'all' | 'completed' | 'active'
 
 export type TodoListInAppType = TodoListOnServerType & {
     activeFilter: TasksFilterType
+    entityStatus: EntityStatusType
 }
 
 let initialState: Array<TodoListInAppType> = []
@@ -15,7 +16,11 @@ let initialState: Array<TodoListInAppType> = []
 export const listsActionsReducer = (state: Array<TodoListInAppType> = initialState, action: ListsActionsType): Array<TodoListInAppType> => {
     switch (action.type) {
         case 'ADD-LIST': {
-            const newInAppList: TodoListInAppType = {...action.payload.todoList, activeFilter: 'all'}
+            const newInAppList: TodoListInAppType = {
+                ...action.payload.todoList,
+                activeFilter: 'all',
+                entityStatus: 'idle'
+            }
             return [newInAppList, ...state]
         }
         case 'REMOVE-LIST':
@@ -30,8 +35,10 @@ export const listsActionsReducer = (state: Array<TodoListInAppType> = initialSta
                 ...list,
                 title: action.payload.newName
             } : list)
-        case "SET-LISTS":
-            return action.payload.lists.map(list => ({...list, activeFilter: 'all'}))
+        case 'SET-LISTS':
+            return action.payload.lists.map(list => ({...list, activeFilter: 'all', entityStatus: 'idle'}))
+        case "SET-LIST-STATUS":
+            return state.map(list => list.id === action.payload.listID ? {...list, entityStatus: action.payload.entityStatus} : list)
         default:
             return state
     }
@@ -44,6 +51,7 @@ type ListsActionsType =
     | ChangeFilterActionType
     | ChangeListNameActionType
     | setListsActionType
+    | setListStatusActionType
 
 export type RemoveListActionType = ReturnType<typeof removeListAC>
 export const removeListAC = (listID: string) => {
@@ -97,6 +105,17 @@ export const setListsAC = (lists: Array<TodoListOnServerType>) => {
     } as const
 }
 
+export type setListStatusActionType = ReturnType<typeof setListStatusAC>
+export const setListStatusAC = (listID: string, newStatus: EntityStatusType) => {
+    return {
+        type: 'SET-LIST-STATUS',
+        payload: {
+            listID,
+            entityStatus: newStatus,
+        },
+    } as const
+}
+
 
 export const fetchListsTC = () => {
     return (dispatch: Dispatch) => {
@@ -111,8 +130,15 @@ export const fetchListsTC = () => {
 
 export const removeListTC = (listID: string) => {
     return (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
+        dispatch(setListStatusAC(listID, 'loading'))
         backendAPI.deleteTodoList(listID)
-            .then(response=> dispatch(removeListAC(listID)))
+            .then(response => {
+                dispatch(removeListAC(listID))
+                dispatch(setAppStatusAC('succeeded'))
+                dispatch(setListStatusAC(listID, 'idle'))
+
+            })
     }
 }
 
@@ -120,18 +146,22 @@ export const addListTC = (name: string) => {
     return (dispatch: Dispatch) => {
         dispatch(setAppStatusAC('loading'))
         backendAPI.createTodoList(name)
-         .then(response => {
-             dispatch(addListAC(response.data.data.item))
-             dispatch(setAppStatusAC('succeeded'))
-         })
+            .then(response => {
+                dispatch(addListAC(response.data.data.item))
+                dispatch(setAppStatusAC('succeeded'))
+            })
     }
 }
 
 export const changeListNameTC = (listID: string, newName: string) => {
     return (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
+        dispatch(setListStatusAC(listID, 'loading'))
         backendAPI.updateTodoList(listID, newName)
             .then(response => {
                 dispatch(changeListNameAC(listID, newName))
+                dispatch(setAppStatusAC('succeeded'))
+                dispatch(setListStatusAC(listID, 'idle'))
             })
     }
 }

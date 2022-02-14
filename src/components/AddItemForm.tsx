@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 type addItemFormPropsType = {
     addItemCallback: (itemName: string) => void
+    disabled?: boolean
 }
 const AddItemFormWrapper = styled.div`
   display: flex;
@@ -12,7 +13,7 @@ const AddItemFormWrapper = styled.div`
   padding-bottom: 20px;
 `
 
-export const AddItemForm = React.memo((props: addItemFormPropsType) => {
+export const AddItemForm = React.memo(({disabled = false, ...props}: addItemFormPropsType) => {
     console.log(`AddItemForm with "${props.addItemCallback.toString()}" callback was called`)
     const [inputText, setInputText] = useState<string>('')
     const [inputError, setInputError] = useState<boolean>(false)
@@ -44,6 +45,7 @@ export const AddItemForm = React.memo((props: addItemFormPropsType) => {
     return (
         <AddItemFormWrapper>
             <TextField
+                disabled={disabled}
                 label={inputError ? 'give it a name' : 'Title'}
                 size={"small"}
                 variant={"outlined"}
@@ -51,7 +53,7 @@ export const AddItemForm = React.memo((props: addItemFormPropsType) => {
                 error={inputError}
                 onChange={inputChangeHandler}
                 onKeyPress={keyPressWithinInputHandler}/>
-            <IconButton onClick={addItem}><AddBox/></IconButton>
+            <IconButton disabled={disabled} onClick={addItem}><AddBox/></IconButton>
         </AddItemFormWrapper>
     );
 });

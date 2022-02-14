@@ -1,4 +1,4 @@
-import {appReducer, AppStatusType, IniAppStateType, setAppErrorAC, setAppStatusAC} from "../state/appReducer";
+import {appReducer, EntityStatusType, IniAppStateType, setAppErrorAC, setAppStatusAC} from "../state/appReducer";
 
 
 let startState: IniAppStateType;
@@ -17,7 +17,7 @@ test('proper error should be set', () => {
 })
 
 test('the status should be set', () => {
-    let status: AppStatusType = "failed"
+    let status: EntityStatusType = "failed"
     const endState = appReducer(startState, setAppStatusAC(status))
     expect(endState.status).toBe(status)
 })

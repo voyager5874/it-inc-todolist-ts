@@ -10,9 +10,12 @@ import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from "../state/task
 import {changeFilterAC, changeListNameTC, removeListTC, TasksFilterType} from "../state/listsActionsReducer";
 import {Task} from "./Task";
 import {TaskStatus, TaskType} from "../api/it-inc-api";
+import {EntityStatusType} from "../state/appReducer";
 
 
 type TodolistPropsType = {
+    demo?: boolean
+    listStatus: EntityStatusType
     todolistID: string
     title: string
     activeFilter: TasksFilterType
@@ -30,12 +33,14 @@ const FilterButtonsWrapper = styled.div`
 `
 
 
-export const Todolist = React.memo((props: TodolistPropsType) => {
+export const Todolist = React.memo(({demo = false, listStatus, ...props}: TodolistPropsType) => {
     console.log(`todolist was called, title: ${props.title}`)
     const tasks = useSelector<RootStateType, Array<TaskType>>(state => state.tasks[props.todolistID])
+    // const listStatus = useSelector<RootStateType, EntityStatusType>(state => state.lists.)
     const dispatch = useDispatch()
 
     useEffect(()=>{
+        if(demo) return
         dispatch(fetchTasksTC(props.todolistID))
     }, [dispatch, props.todolistID])
 
@@ -81,11 +86,11 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         <TodolistCard>
             <h3>
                 <EditableSpan itemName={props.title} itemNameChangedCallback={changeListName}/>
-                <IconButton onClick={deleteTodolist}>
+                <IconButton disabled={listStatus === 'loading'} onClick={deleteTodolist}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm addItemCallback={addTask}/>
+            <AddItemForm disabled={listStatus==='loading'} addItemCallback={addTask}/>
             <List disablePadding>
                 {
                     (filteredTasks || []).map(task =>

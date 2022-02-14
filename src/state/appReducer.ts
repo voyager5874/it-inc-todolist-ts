@@ -1,7 +1,7 @@
-export type AppStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+export type EntityStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
 export type IniAppStateType = {
-    status: AppStatusType
+    appStatus: EntityStatusType
     error: string | null
 }
 
@@ -11,7 +11,7 @@ export enum APP_ACTIONS_TYPE {
 }
 
 const iniAppState: IniAppStateType = {
-    status: 'idle',
+    appStatus: 'idle',
     error: null,
 }
 
@@ -20,7 +20,7 @@ type AppActionsType = SetAppErrorActionType | SetAppStatusActionType
 export const appReducer = ( state: IniAppStateType = iniAppState, action: AppActionsType) : IniAppStateType => {
     switch (action.type){
         case APP_ACTIONS_TYPE.APP_SET_STATUS:
-            return {...state, status: action.status}
+            return {...state, appStatus: action.status}
         case APP_ACTIONS_TYPE.APP_SET_ERROR:
             return {...state, error: action.error}
         default:
@@ -38,7 +38,7 @@ export const setAppErrorAC = (errorMessage: string | null) => {
 }
 
 type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
-export const setAppStatusAC = (newStatus: AppStatusType) => {
+export const setAppStatusAC = (newStatus: EntityStatusType) => {
     return{
         type: APP_ACTIONS_TYPE.APP_SET_STATUS,
         status: newStatus,

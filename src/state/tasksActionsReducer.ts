@@ -37,7 +37,6 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
         //     return {...state, [action.payload.todoList.id]: []}
 
         case 'REMOVE-LIST': {
-            debugger
             const stateCopy = {...state}
             delete stateCopy[action.payload.listID]
             return stateCopy

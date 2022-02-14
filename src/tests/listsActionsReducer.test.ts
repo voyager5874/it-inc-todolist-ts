@@ -4,9 +4,10 @@ import {
     changeFilterAC,
     changeListNameAC,
     listsActionsReducer,
-    removeListAC, setListsAC, TasksFilterType, TodoListInAppType,
+    removeListAC, setListsAC, setListStatusAC, TasksFilterType, TodoListInAppType,
 } from "../state/listsActionsReducer";
 import {TodoListOnServerType} from "../api/it-inc-api";
+import {EntityStatusType} from "../state/appReducer";
 
 
 let startState: TodoListInAppType[] = [];
@@ -15,8 +16,8 @@ const todolistId2 = v1();
 
 beforeEach(() => {
     startState = [
-        {id: todolistId1, title: "What to learn", activeFilter: "all", order: 0, addedDate:''},
-        {id: todolistId2, title: "What to buy", activeFilter: "all", order: 0, addedDate:''},
+        {id: todolistId1, title: "What to learn", activeFilter: "all", order: 0, addedDate:'', entityStatus: 'idle'},
+        {id: todolistId2, title: "What to buy", activeFilter: "all", order: 0, addedDate:'', entityStatus: 'idle'},
     ]
 });
 
@@ -55,4 +56,13 @@ test('received todo lists should be set to the state', () => {
     const action = setListsAC(startState);
     const endState = listsActionsReducer([], action);
     expect(endState.length).toBe(2);
+});
+
+
+test('listStatus of the correct todolist should be changed', () => {
+    let newStatus: EntityStatusType = "loading";
+    const action = setListStatusAC(todolistId2, newStatus);
+    const endState = listsActionsReducer(startState, action);
+    expect(endState[0].entityStatus).toBe("idle");
+    expect(endState[1].entityStatus).toBe(newStatus);
 });
