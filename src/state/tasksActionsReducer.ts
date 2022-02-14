@@ -3,6 +3,7 @@ import {backendAPI, TaskType, taskPutRequestBodyType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
 import {RootStateType} from "./store";
 import {setAppErrorAC, setAppStatusAC} from "./appReducer";
+import {handleReject, handleResolveWithServerErrorMessage} from "../utils/backendErrorHandler";
 
 
 let initialState: TasksListType = {}
@@ -30,8 +31,10 @@ export const tasksActionsReducer = (state: TasksListType = initialState, action:
             }
 
         case "UPDATE-TASK-DATA":
-            return {...state, [action.payload.listID]: state[action.payload.listID]
-                    .map(task => task.id === action.payload.taskID ? {...task, ...action.payload.newData} : task)}
+            return {
+                ...state, [action.payload.listID]: state[action.payload.listID]
+                    .map(task => task.id === action.payload.taskID ? {...task, ...action.payload.newData} : task)
+            }
 
         // case 'ADD-LIST':
         //     return {...state, [action.payload.todoList.id]: []}
@@ -123,6 +126,9 @@ export const fetchTasksTC = (todoListID: string) => {
                 dispatch(setTasksAC(todoListID, response.data.items))
                 dispatch(setAppStatusAC('succeeded'))
             })
+            .catch(error => {
+                handleReject(error, dispatch)
+            })
     }
 
 }
@@ -133,6 +139,9 @@ export const removeTaskTC = (listID: string, taskID: string) => {
             .then(response => {
                 dispatch(removeTaskAC(listID, taskID))
             })
+            .catch(error => {
+                handleReject(error, dispatch)
+            })
     }
 }
 
@@ -141,19 +150,15 @@ export const addTaskTC = (listID: string, taskName: string) => {
         dispatch(setAppStatusAC('loading'))
         backendAPI.createTask(listID, taskName)
             .then(response => {
-                if(response.data.resultCode === 0){
+                if (response.data.resultCode === 0) {
                     dispatch(addTaskAC(listID, response.data.data.item))
                     dispatch(setAppStatusAC('succeeded'))
-
+                } else {
+                    handleResolveWithServerErrorMessage(response.data, dispatch)
                 }
-                else if(response.data.messages.length){
-                    dispatch(setAppErrorAC(response.data.messages[0]))
-                }
-                else{
-                    dispatch(setAppErrorAC('some error occurred'))
-                }
-                dispatch(setAppStatusAC('failed'))
-
+            })
+            .catch(error => {
+                handleReject(error, dispatch)
             })
     }
 }
@@ -199,7 +204,14 @@ export const updateTaskTC = (listID: string, taskID: string, newTaskData: Update
 
         backendAPI.updateTask(listID, taskID, requestPayload)
             .then(response => {
-                dispatch(updateTaskDataAC(listID, taskID, newTaskData))
+                if (response.data.resultCode === 0) {
+                    dispatch(updateTaskDataAC(listID, taskID, newTaskData))
+                } else {
+                    handleResolveWithServerErrorMessage(response.data, dispatch)
+                }
+            })
+            .catch(error => {
+                dispatch(setAppErrorAC(error.message))
             })
     }
 }

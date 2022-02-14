@@ -1,6 +1,7 @@
 import {backendAPI, TodoListOnServerType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
-import {EntityStatusType, setAppStatusAC} from "./appReducer";
+import {EntityStatusType, setAppErrorAC, setAppStatusAC} from "./appReducer";
+import {handleReject} from "../utils/backendErrorHandler";
 
 
 export type TasksFilterType = 'all' | 'completed' | 'active'
@@ -125,6 +126,9 @@ export const fetchListsTC = () => {
                 dispatch(setListsAC(response.data))
                 dispatch(setAppStatusAC('succeeded'))
             })
+            .catch(error =>{
+                handleReject(error, dispatch)
+            })
     }
 }
 
@@ -139,6 +143,9 @@ export const removeListTC = (listID: string) => {
                 dispatch(setListStatusAC(listID, 'idle'))
 
             })
+            .catch(error =>{
+                handleReject(error, dispatch)
+            })
     }
 }
 
@@ -149,6 +156,9 @@ export const addListTC = (name: string) => {
             .then(response => {
                 dispatch(addListAC(response.data.data.item))
                 dispatch(setAppStatusAC('succeeded'))
+            })
+            .catch(error =>{
+                handleReject(error, dispatch)
             })
     }
 }
@@ -162,6 +172,9 @@ export const changeListNameTC = (listID: string, newName: string) => {
                 dispatch(changeListNameAC(listID, newName))
                 dispatch(setAppStatusAC('succeeded'))
                 dispatch(setListStatusAC(listID, 'idle'))
+            })
+            .catch(error =>{
+                handleReject(error, dispatch)
             })
     }
 }

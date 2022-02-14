@@ -45,7 +45,7 @@ export type TaskType = {
     addedDate: string
 }
 
-type BaseResponseType<T = {}> = {
+export type BaseResponseType<T = {}> = {
     resultCode: number
     messages: Array<string>
     fieldsErrors: Array<string>
