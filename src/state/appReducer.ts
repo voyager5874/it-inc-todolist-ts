@@ -15,7 +15,7 @@ const iniAppState: IniAppStateType = {
     error: null,
 }
 
-type AppActionsType = SetAppErrorActionType | SetAppStatusActionType
+type AppActionsType = ReturnType<typeof setAppErrorAC> | ReturnType<typeof setAppStatusAC>
 
 export const appReducer = ( state: IniAppStateType = iniAppState, action: AppActionsType) : IniAppStateType => {
     switch (action.type){
@@ -29,7 +29,6 @@ export const appReducer = ( state: IniAppStateType = iniAppState, action: AppAct
 }
 
 
-type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
 export const setAppErrorAC = (errorMessage: string | null) => {
     return{
         type: APP_ACTIONS_TYPE.APP_SET_ERROR,
@@ -37,7 +36,6 @@ export const setAppErrorAC = (errorMessage: string | null) => {
     } as const
 }
 
-type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
 export const setAppStatusAC = (newStatus: EntityStatusType) => {
     return{
         type: APP_ACTIONS_TYPE.APP_SET_STATUS,
