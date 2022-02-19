@@ -15,9 +15,9 @@ const iniAppState: IniAppStateType = {
     error: null,
 }
 
-type AppActionsType = ReturnType<typeof setAppErrorAC> | ReturnType<typeof setAppStatusAC>
+export type AppReducerActionsType = ReturnType<typeof setAppErrorAC> | ReturnType<typeof setAppStatusAC>
 
-export const appReducer = ( state: IniAppStateType = iniAppState, action: AppActionsType) : IniAppStateType => {
+export const appReducer = ( state: IniAppStateType = iniAppState, action: AppReducerActionsType) : IniAppStateType => {
     switch (action.type){
         case APP_ACTIONS_TYPE.APP_SET_STATUS:
             return {...state, appStatus: action.status}

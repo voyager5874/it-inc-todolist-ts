@@ -1,20 +1,19 @@
 import React, {useCallback, useEffect} from 'react';
 import {AddItemForm} from "./components/AddItemForm";
-import {
-    AppBar,
-    Button,
-    Container,
-    Grid,
-    IconButton,
-    LinearProgress,
-    Paper,
-    Toolbar,
-    Typography
-} from "@material-ui/core";
+
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Toolbar from "@material-ui/core/Toolbar";
+import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import {Menu} from "@material-ui/icons";
 import {addListTC, fetchListsTC, TodoListInAppType} from "./state/listsActionsReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {RootStateType} from "./state/store";
+import {RootStateType, useAppSelector} from "./state/store";
 import {Todolist} from "./components/Todolist";
 import {ErrorSnackbar} from "./components/ErrorSnackbar";
 import {EntityStatusType} from "./state/appReducer";
@@ -27,7 +26,8 @@ type AppPropsType = {
 
 export const App = ({demo = false, ...props}: AppPropsType) => {
     console.log("app was called")
-    const todolists = useSelector<RootStateType, TodoListInAppType[]>(state => state.lists);
+    // const todolists = useSelector<RootStateType, TodoListInAppType[]>(state => state.lists);
+    const todolists = useAppSelector<TodoListInAppType[]>(state => state.lists);
     const appStatus = useSelector<RootStateType, EntityStatusType>(state => state.app.appStatus)
     const dispatch = useDispatch()
 
@@ -35,7 +35,7 @@ export const App = ({demo = false, ...props}: AppPropsType) => {
     useEffect(()=>{
         if(demo) return
         dispatch(fetchListsTC())
-    },[dispatch])
+    },[dispatch, demo])
 
     const addTodolist = useCallback((listName: string) => {
         if (listName) {
@@ -56,7 +56,7 @@ export const App = ({demo = false, ...props}: AppPropsType) => {
                     </Typography>
                     <Button color="inherit" variant={"outlined"}>Login</Button>
                 </Toolbar>
-                {appStatus === 'loading' && < LinearProgress color="secondary"/>}
+                {appStatus === 'loading' && < LinearProgress style={{position:"absolute", top: "800px"}} color="secondary"/>}
             </AppBar>
             <Container fixed>
                 <Grid container style={{paddingTop: "20px"}}>

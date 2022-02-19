@@ -45,8 +45,15 @@ export type TaskType = {
     addedDate: string
 }
 
+export enum ServerResultCodes {
+    success=0,
+    error=1,
+    captcha=10
+
+}
+
 export type BaseResponseType<T = {}> = {
-    resultCode: number
+    resultCode: ServerResultCodes
     messages: Array<string>
     fieldsErrors: Array<string>
     data: T

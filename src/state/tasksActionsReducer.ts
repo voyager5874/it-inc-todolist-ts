@@ -1,9 +1,21 @@
-import {AddListActionType, RemoveListActionType, setListsActionType} from "./listsActionsReducer";
-import {backendAPI, TaskType, taskPutRequestBodyType} from "../api/it-inc-api";
+import {
+    AddListActionType,
+    RemoveListActionType,
+    setListsActionType
+} from "./listsActionsReducer";
+import {
+    backendAPI,
+    ServerResultCodes,
+    taskPutRequestBodyType,
+    TaskType
+} from "../api/it-inc-api";
 import {Dispatch} from "redux";
 import {RootStateType} from "./store";
 import {setAppErrorAC, setAppStatusAC} from "./appReducer";
-import {handleReject, handleResolveWithServerErrorMessage} from "../utils/backendErrorHandler";
+import {
+    handleReject,
+    handleResolveWithServerErrorMessage
+} from "../utils/backendErrorHandler";
 
 
 let initialState: TasksListType = {}
@@ -150,7 +162,7 @@ export const addTaskTC = (listID: string, taskName: string) => {
         dispatch(setAppStatusAC('loading'))
         backendAPI.createTask(listID, taskName)
             .then(response => {
-                if (response.data.resultCode === 0) {
+                if (response.data.resultCode === ServerResultCodes.success) {
                     dispatch(addTaskAC(listID, response.data.data.item))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
@@ -204,7 +216,7 @@ export const updateTaskTC = (listID: string, taskID: string, newTaskData: Update
 
         backendAPI.updateTask(listID, taskID, requestPayload)
             .then(response => {
-                if (response.data.resultCode === 0) {
+                if (response.data.resultCode === ServerResultCodes.success) {
                     dispatch(updateTaskDataAC(listID, taskID, newTaskData))
                 } else {
                     handleResolveWithServerErrorMessage(response.data, dispatch)

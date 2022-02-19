@@ -1,7 +1,8 @@
 import React, {useCallback} from "react";
-import {Checkbox, IconButton} from "@material-ui/core";
+import  IconButton from "@material-ui/core/IconButton";
+import Checkbox from "@material-ui/core/Checkbox";
 import {EditableSpan} from "./EditableSpan";
-import {Backspace} from "@material-ui/icons";
+import Backspace from "@material-ui/icons/Backspace";
 import styled from "styled-components";
 import {TaskStatus} from "../api/it-inc-api";
 

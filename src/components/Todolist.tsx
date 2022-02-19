@@ -1,8 +1,13 @@
 import React, {useCallback, useEffect} from "react";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, IconButton, List, ListItem} from "@material-ui/core";
-import {Delete} from "@material-ui/icons";
+// import {Button, IconButton, List, ListItem} from "@material-ui/core";
+//tree-shaking is working out of the box??
+import ListItem from "@material-ui/core/ListItem";
+import List from "@material-ui/core/List";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import Delete from "@material-ui/icons/Delete";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../state/store";

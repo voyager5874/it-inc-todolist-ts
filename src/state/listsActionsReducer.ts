@@ -1,7 +1,10 @@
-import {backendAPI, TodoListOnServerType} from "../api/it-inc-api";
+import {backendAPI, ServerResultCodes, TodoListOnServerType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
-import {EntityStatusType, setAppErrorAC, setAppStatusAC} from "./appReducer";
-import {handleReject} from "../utils/backendErrorHandler";
+import {AppReducerActionsType, EntityStatusType, setAppStatusAC,} from "./appReducer";
+import {
+    handleReject,
+    handleResolveWithServerErrorMessage
+} from "../utils/backendErrorHandler";
 
 
 export type TasksFilterType = 'all' | 'completed' | 'active'
@@ -37,9 +40,16 @@ export const listsActionsReducer = (state: Array<TodoListInAppType> = initialSta
                 title: action.payload.newName
             } : list)
         case 'SET-LISTS':
-            return action.payload.lists.map(list => ({...list, activeFilter: 'all', entityStatus: 'idle'}))
+            return action.payload.lists.map(list => ({
+                ...list,
+                activeFilter: 'all',
+                entityStatus: 'idle'
+            }))
         case "SET-LIST-STATUS":
-            return state.map(list => list.id === action.payload.listID ? {...list, entityStatus: action.payload.entityStatus} : list)
+            return state.map(list => list.id === action.payload.listID ? {
+                ...list,
+                entityStatus: action.payload.entityStatus
+            } : list)
         default:
             return state
     }
@@ -47,12 +57,13 @@ export const listsActionsReducer = (state: Array<TodoListInAppType> = initialSta
 };
 
 type ListsActionsType =
-    AddListActionType
-    | RemoveListActionType
-    | ChangeFilterActionType
-    | ChangeListNameActionType
-    | setListsActionType
-    | setListStatusActionType
+    ReturnType<typeof addListAC>
+    | ReturnType<typeof removeListAC>
+    | ReturnType<typeof changeFilterAC>
+    | ReturnType<typeof changeListNameAC>
+    | ReturnType<typeof setListsAC>
+    | ReturnType<typeof setListStatusAC>
+    | AppReducerActionsType
 
 export type RemoveListActionType = ReturnType<typeof removeListAC>
 export const removeListAC = (listID: string) => {
@@ -74,7 +85,7 @@ export const addListAC = (todoList: TodoListOnServerType) => {
     } as const
 }
 
-type ChangeFilterActionType = ReturnType<typeof changeFilterAC>
+// type ChangeFilterActionType = ReturnType<typeof changeFilterAC>
 export const changeFilterAC = (listID: string, filter: TasksFilterType) => {
     return {
         type: 'CHANGE-FILTER',
@@ -85,7 +96,7 @@ export const changeFilterAC = (listID: string, filter: TasksFilterType) => {
     } as const
 }
 
-type ChangeListNameActionType = ReturnType<typeof changeListNameAC>
+// type ChangeListNameActionType = ReturnType<typeof changeListNameAC>
 export const changeListNameAC = (listID: string, newName: string) => {
     return {
         type: 'CHANGE-LIST-NAME',
@@ -119,61 +130,73 @@ export const setListStatusAC = (listID: string, newStatus: EntityStatusType) => 
 
 
 export const fetchListsTC = () => {
-    return (dispatch: Dispatch) => {
+    return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
         backendAPI.getTodoLists()
             .then(response => {
                 dispatch(setListsAC(response.data))
                 dispatch(setAppStatusAC('succeeded'))
             })
-            .catch(error =>{
+            .catch(error => {
                 handleReject(error, dispatch)
             })
     }
 }
 
 export const removeListTC = (listID: string) => {
-    return (dispatch: Dispatch) => {
+    return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
         dispatch(setListStatusAC(listID, 'loading'))
         backendAPI.deleteTodoList(listID)
             .then(response => {
-                dispatch(removeListAC(listID))
-                dispatch(setAppStatusAC('succeeded'))
-                dispatch(setListStatusAC(listID, 'idle'))
-
+                if(response.data.resultCode === ServerResultCodes.success){
+                    dispatch(removeListAC(listID))
+                    dispatch(setAppStatusAC('succeeded'))
+                    dispatch(setListStatusAC(listID, 'idle'))
+                } else{
+                    handleResolveWithServerErrorMessage(response.data, dispatch)
+                }
             })
-            .catch(error =>{
+            .catch(error => {
                 handleReject(error, dispatch)
             })
     }
 }
 
 export const addListTC = (name: string) => {
-    return (dispatch: Dispatch) => {
+    return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
         backendAPI.createTodoList(name)
             .then(response => {
-                dispatch(addListAC(response.data.data.item))
-                dispatch(setAppStatusAC('succeeded'))
+                if(response.data.resultCode === ServerResultCodes.success){
+                    dispatch(addListAC(response.data.data.item))
+                    dispatch(setAppStatusAC('succeeded'))
+                } else {
+                    handleResolveWithServerErrorMessage(response.data, dispatch)
+                }
             })
-            .catch(error =>{
+            .catch(error => {
                 handleReject(error, dispatch)
             })
     }
 }
 
 export const changeListNameTC = (listID: string, newName: string) => {
-    return (dispatch: Dispatch) => {
+    return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
         dispatch(setListStatusAC(listID, 'loading'))
         backendAPI.updateTodoList(listID, newName)
             .then(response => {
-                dispatch(changeListNameAC(listID, newName))
-                dispatch(setAppStatusAC('succeeded'))
-                dispatch(setListStatusAC(listID, 'idle'))
+                if(response.data.resultCode===ServerResultCodes.success){
+                    dispatch(changeListNameAC(listID, newName))
+                    dispatch(setAppStatusAC('succeeded'))
+                    dispatch(setListStatusAC(listID, 'idle'))
+                } else{
+                    handleResolveWithServerErrorMessage(response.data, dispatch)
+                }
+
             })
-            .catch(error =>{
+            .catch(error => {
                 handleReject(error, dispatch)
             })
     }
