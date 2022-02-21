@@ -3,7 +3,7 @@ import {BaseResponseType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
 import {AxiosError} from "axios";
 
-export const handleResolveWithServerErrorMessage = (data: BaseResponseType, dispatch: Dispatch<AppReducerActionsType>) => {
+export const handleResolveWithServerErrorMessage = <T>(data: BaseResponseType<T>, dispatch: Dispatch<AppReducerActionsType>) => {
     if (data.messages.length) {
         dispatch(setAppErrorAC(data.messages[0]))
     } else {

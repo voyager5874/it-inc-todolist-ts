@@ -172,7 +172,7 @@ export const addListTC = (name: string) => {
                     dispatch(addListAC(response.data.data.item))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    handleResolveWithServerErrorMessage(response.data, dispatch)
+                    handleResolveWithServerErrorMessage<{item: TodoListOnServerType}>(response.data, dispatch)
                 }
             })
             .catch(error => {

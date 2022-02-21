@@ -166,7 +166,7 @@ export const addTaskTC = (listID: string, taskName: string) => {
                     dispatch(addTaskAC(listID, response.data.data.item))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    handleResolveWithServerErrorMessage(response.data, dispatch)
+                    handleResolveWithServerErrorMessage<{item: TaskType}>(response.data, dispatch)
                 }
             })
             .catch(error => {

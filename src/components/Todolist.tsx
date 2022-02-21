@@ -112,7 +112,6 @@ export const Todolist = React.memo(({demo = false, listStatus, ...props}: Todoli
                         </ListItem>)
 
                 }
-                {/*< Divider variant="inset" component="li"/>*/}
             </List>
             <FilterButtonsWrapper>
                 <Button variant="contained" color={props.activeFilter === "all" ? "primary" : "default"}
