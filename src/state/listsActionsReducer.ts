@@ -1,4 +1,4 @@
-import {backendAPI, ServerResultCodes, TodoListOnServerType} from "../api/it-inc-api";
+import {appDataAPI, ServerResultCodes, TodoListOnServerType} from "../api/it-inc-api";
 import {Dispatch} from "redux";
 import {AppReducerActionsType, EntityStatusType, setAppStatusAC,} from "./appReducer";
 import {
@@ -132,7 +132,7 @@ export const setListStatusAC = (listID: string, newStatus: EntityStatusType) => 
 export const fetchListsTC = () => {
     return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
-        backendAPI.getTodoLists()
+        appDataAPI.getTodoLists()
             .then(response => {
                 dispatch(setListsAC(response.data))
                 dispatch(setAppStatusAC('succeeded'))
@@ -147,7 +147,7 @@ export const removeListTC = (listID: string) => {
     return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
         dispatch(setListStatusAC(listID, 'loading'))
-        backendAPI.deleteTodoList(listID)
+        appDataAPI.deleteTodoList(listID)
             .then(response => {
                 if(response.data.resultCode === ServerResultCodes.success){
                     dispatch(removeListAC(listID))
@@ -166,7 +166,7 @@ export const removeListTC = (listID: string) => {
 export const addListTC = (name: string) => {
     return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
-        backendAPI.createTodoList(name)
+        appDataAPI.createTodoList(name)
             .then(response => {
                 if(response.data.resultCode === ServerResultCodes.success){
                     dispatch(addListAC(response.data.data.item))
@@ -185,7 +185,7 @@ export const changeListNameTC = (listID: string, newName: string) => {
     return (dispatch: Dispatch<ListsActionsType>) => {
         dispatch(setAppStatusAC('loading'))
         dispatch(setListStatusAC(listID, 'loading'))
-        backendAPI.updateTodoList(listID, newName)
+        appDataAPI.updateTodoList(listID, newName)
             .then(response => {
                 if(response.data.resultCode===ServerResultCodes.success){
                     dispatch(changeListNameAC(listID, newName))

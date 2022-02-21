@@ -55,7 +55,7 @@ export const App = ({demo = false, ...props}: AppPropsType) => {
                 <Container fixed>
                     <Routes>
                         <Route path={"/"} element={<AllTodoLists demo={demo}/>}/>
-                        <Route path={"/login"} element={<Login/>}/>
+                        <Route path={"/loginReducer"} element={<Login/>}/>
                     </Routes>
                 </Container>
 

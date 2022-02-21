@@ -4,38 +4,54 @@ import {
     Checkbox,
     FormControl,
     FormControlLabel,
-    FormGroup,
+    FormGroup, FormLabel,
     TextField
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useFormik} from "formik";
+import {useDispatch} from "react-redux";
+import {authTC} from "../state/reducers/loginReducer";
+import {useAppSelector} from "../state/store";
+import {useNavigate} from "react-router-dom";
 
 export const Login = () => {
+    const dispatch = useDispatch()
+    let navigate = useNavigate()
+    const isLoggedIn = useAppSelector<boolean>(state=>state.auth.isLoggedIn)
 
     const formik = useFormik({
         validate: (values) => {
-            if(!values.email){
+            if (!values.email) {
                 return {email: "email required"}
             }
-            if(!values.password){
+            if (!values.password) {
                 return {password: "password required"}
             }
         },
         initialValues: {
-            email: 'free@free.com',
+            email: 'free@samuraijs.com',
             password: 'free',
             rememberMe: false,
         },
         onSubmit: values => {
-            alert(JSON.stringify(values));
+            dispatch(authTC(values))
         },
     });
+
+    // if(isLoggedIn){
+    //     navigate("/")
+    // }
+
 
     return (
         <Grid container justify="center">
             <Grid item xs={4}>
                 <form onSubmit={formik.handleSubmit}>
                     <FormControl>
+                        <FormLabel>
+                            <p>sign up on <a href={"https://social-network.samuraijs.com/"}>samuraiJS</a></p>
+                            <p>or use the default credentials</p>
+                        </FormLabel>
                         <FormGroup>
                             <TextField
                                 label={"Email"}
@@ -61,8 +77,13 @@ export const Login = () => {
                                 }
                                 label={"remember me"}
                             />
-                            <Button type={"submit"} variant={"contained"}
-                                    color={"primary"}>Login</Button>
+                            <Button type={"submit"}
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    disabled={Boolean(formik.errors.password) || Boolean(formik.errors.email)}
+                            >
+                                Login
+                            </Button>
                         </FormGroup>
                     </FormControl>
                 </form>

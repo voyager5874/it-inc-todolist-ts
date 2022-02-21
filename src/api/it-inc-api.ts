@@ -44,9 +44,9 @@ export type TaskType = {
 }
 
 export enum ServerResultCodes {
-    success=0,
-    error=1,
-    captcha=10
+    success = 0,
+    error = 1,
+    captcha = 10
 
 }
 
@@ -73,7 +73,7 @@ export type taskPutRequestBodyType = {
 }
 
 
-export const backendAPI = {
+export const appDataAPI = {
     updateTodoList(todolistId: string, title: string) {
         return instance.put<BaseResponseType>(`todo-lists/${todolistId}`, {title: title})
     },
@@ -99,4 +99,21 @@ export const backendAPI = {
         return instance.delete<BaseResponseType>(`/todo-lists/${todolistID}/tasks/${taskID}`)
 
     }
+}
+
+export type LoginDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
+export const authAPI = {
+    login(authData: LoginDataType) {
+        return instance.post<BaseResponseType<{ userId?: number }>>("auth/login", authData)
+    },
+    authMe(){
+        return instance.get<BaseResponseType>("auth/me")
+    }
+
 }

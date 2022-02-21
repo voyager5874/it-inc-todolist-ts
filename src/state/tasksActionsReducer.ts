@@ -4,7 +4,7 @@ import {
     setListsActionType
 } from "./listsActionsReducer";
 import {
-    backendAPI,
+    appDataAPI,
     ServerResultCodes,
     taskPutRequestBodyType,
     TaskType
@@ -133,7 +133,7 @@ export const setTasksAC = (todoListID: string, tasks: Array<TaskType>) => {
 export const fetchTasksTC = (todoListID: string) => {
     return (dispatch: Dispatch) => {
         dispatch(setAppStatusAC('loading'))
-        backendAPI.getTasks(todoListID)
+        appDataAPI.getTasks(todoListID)
             .then(response => {
                 dispatch(setTasksAC(todoListID, response.data.items))
                 dispatch(setAppStatusAC('succeeded'))
@@ -147,7 +147,7 @@ export const fetchTasksTC = (todoListID: string) => {
 
 export const removeTaskTC = (listID: string, taskID: string) => {
     return (dispatch: Dispatch) => {
-        backendAPI.deleteTask(listID, taskID)
+        appDataAPI.deleteTask(listID, taskID)
             .then(response => {
                 dispatch(removeTaskAC(listID, taskID))
             })
@@ -160,7 +160,7 @@ export const removeTaskTC = (listID: string, taskID: string) => {
 export const addTaskTC = (listID: string, taskName: string) => {
     return (dispatch: Dispatch) => {
         dispatch(setAppStatusAC('loading'))
-        backendAPI.createTask(listID, taskName)
+        appDataAPI.createTask(listID, taskName)
             .then(response => {
                 if (response.data.resultCode === ServerResultCodes.success) {
                     dispatch(addTaskAC(listID, response.data.data.item))
@@ -214,7 +214,7 @@ export const updateTaskTC = (listID: string, taskID: string, newTaskData: Update
         //let clone = Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj));
         // debugger
 
-        backendAPI.updateTask(listID, taskID, requestPayload)
+        appDataAPI.updateTask(listID, taskID, requestPayload)
             .then(response => {
                 if (response.data.resultCode === ServerResultCodes.success) {
                     dispatch(updateTaskDataAC(listID, taskID, newTaskData))

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import ReactJson from "react-json-view";
-import {backendAPI, TaskPriority, TaskStatus, taskPutRequestBodyType} from "../api/it-inc-api";
+import {appDataAPI, TaskPriority, TaskStatus, taskPutRequestBodyType} from "../api/it-inc-api";
 
 export default { //for storybook
     title: 'API'
@@ -20,14 +20,14 @@ export const RequestsMiniApp = () => {
 
 
     const getListsFromServer = () => {
-        backendAPI.getTodoLists()
+        appDataAPI.getTodoLists()
             .then(response => setTodoLists(response.data))
 
     }
 
     const getTasksFromServer = () => {
         if (chosenTodoListID) {
-            backendAPI.getTasks(chosenTodoListID)
+            appDataAPI.getTasks(chosenTodoListID)
                 .then(response => setTasks(response.data))
         }
         else{
@@ -36,7 +36,7 @@ export const RequestsMiniApp = () => {
     }
     const createNewList = () => {
         if(listNameToCreate) {
-            backendAPI.createTodoList(listNameToCreate)
+            appDataAPI.createTodoList(listNameToCreate)
                 .then(response=>setResponse(response))
                 .then(getListsFromServer)
         }
@@ -48,7 +48,7 @@ export const RequestsMiniApp = () => {
 
     const deleteListFromServer = () => {
         if (chosenTodoListID) {
-            backendAPI.deleteTodoList(chosenTodoListID)
+            appDataAPI.deleteTodoList(chosenTodoListID)
                 .then(response => setResponse(response))
                 .then(getListsFromServer)
         }
@@ -57,7 +57,7 @@ export const RequestsMiniApp = () => {
 
     const deleteTaskFromList = () => {
         if(chosenTodoListID && chosenTaskID){
-            backendAPI.deleteTask(chosenTodoListID, chosenTaskID)
+            appDataAPI.deleteTask(chosenTodoListID, chosenTaskID)
                 .then(response=>setResponse(response))
                 .then(getTasksFromServer)
         }
@@ -70,7 +70,7 @@ export const RequestsMiniApp = () => {
 
     const createTaskInChosenList = () => {
         if (chosenTodoListID && taskNameToCreate) {
-            backendAPI.createTask(chosenTodoListID, taskNameToCreate)
+            appDataAPI.createTask(chosenTodoListID, taskNameToCreate)
                 .then(response => setResponse(response))
                 .then(getTasksFromServer)
         }
@@ -92,7 +92,7 @@ export const RequestsMiniApp = () => {
                 deadline: '2022-02-10T13:03:26.157',
             }
 
-            backendAPI.updateTask(chosenTodoListID, chosenTaskID, requestPayload)
+            appDataAPI.updateTask(chosenTodoListID, chosenTaskID, requestPayload)
                 .then(response=>setResponse(response))
                 .then(getTasksFromServer)
         }
@@ -104,7 +104,7 @@ export const RequestsMiniApp = () => {
 
     const changeListName = () => {
         if (listNameToCreate && chosenTodoListID) {
-            backendAPI.updateTodoList(chosenTodoListID, listNameToCreate)
+            appDataAPI.updateTodoList(chosenTodoListID, listNameToCreate)
                 .then(response => setResponse(response))
                 .then(getListsFromServer)
         } else {
