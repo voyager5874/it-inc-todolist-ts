@@ -1,6 +1,6 @@
-import {addListAC, listsActionsReducer, TodoListInAppType} from "../state/listsActionsReducer";
-import {tasksActionsReducer, TasksListType} from "../state/tasksActionsReducer";
-import {TodoListOnServerType} from "../api/it-inc-api";
+import {addListAC, listsActionsReducer, TodoListInAppType} from "../state/reducers/listsActionsReducer";
+import {tasksActionsReducer, TasksListType} from "../state/reducers/tasksActionsReducer";
+import {TodoListOnServerType} from "../api/appDataAPI";
 
 
 test('ids should be equal', () => {

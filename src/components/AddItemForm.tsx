@@ -1,60 +1,67 @@
-import React, {useCallback, useState} from 'react';
-import {IconButton, TextField} from "@material-ui/core";
-import {AddBox} from "@material-ui/icons";
-import styled from "styled-components";
+import React, { memo, useState } from 'react';
+
+import { IconButton, TextField } from '@material-ui/core';
+import { AddBox } from '@material-ui/icons';
+import styled from 'styled-components';
+
+import { ComponentReturnType } from '../types/ComponentReturnType';
 
 type addItemFormPropsType = {
-    addItemCallback: (itemName: string) => void
-    disabled?: boolean
-}
+  addItemCallback: (itemName: string) => void;
+  disabled?: boolean;
+};
 const AddItemFormWrapper = styled.div`
   display: flex;
   align-items: center;
   padding-bottom: 20px;
-`
+`;
 
-export const AddItemForm = React.memo(({disabled = false, ...props}: addItemFormPropsType) => {
-    console.log(`AddItemForm with "${props.addItemCallback.toString()}" callback was called`)
-    const [inputText, setInputText] = useState<string>('')
-    const [inputError, setInputError] = useState<boolean>(false)
+export const AddItemForm = memo(
+  ({ disabled = false, ...props }: addItemFormPropsType): ComponentReturnType => {
+    // console.log(
+    //   `AddItemForm with "${props.addItemCallback.toString()}" callback was called`,
+    // );
+    const [textFieldContent, setTextFieldContent] = useState<string>('');
+    const [error, setError] = useState<boolean>(false);
 
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (inputError) {
-            setInputError(false)
-        }
-        setInputText(event.currentTarget.value)
-    }
+    const onTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (error) {
+        setError(false);
+      }
+      setTextFieldContent(event.currentTarget.value.trim());
+    };
 
-    const addItem = useCallback(() => {
-        const cleanString = inputText.trim()
-        if (cleanString) {
-            props.addItemCallback(cleanString)
-        } else {
-            setInputError(true)
-        }
-        setInputText('')
-    },[inputText, props.addItemCallback])
+    const addItem = (): void => {
+      if (textFieldContent) {
+        props.addItemCallback(textFieldContent);
+      } else {
+        setError(true);
+      }
+      setTextFieldContent('');
+    };
 
-    const keyPressWithinInputHandler = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            addItem()
-        }
-    }, [addItem])
-
+    const onEnterKeyPress = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+      if (event.key === 'Enter') {
+        addItem();
+      }
+    };
 
     return (
-        <AddItemFormWrapper>
-            <TextField
-                disabled={disabled}
-                label={inputError ? 'give it a name' : 'Title'}
-                size={"small"}
-                variant={"outlined"}
-                value={inputText}
-                error={inputError}
-                onChange={inputChangeHandler}
-                onKeyPress={keyPressWithinInputHandler}/>
-            <IconButton disabled={disabled} onClick={addItem}><AddBox/></IconButton>
-        </AddItemFormWrapper>
+      <AddItemFormWrapper>
+        <TextField
+          disabled={disabled}
+          label={error ? 'give it a name' : 'Title'}
+          size="small"
+          variant="outlined"
+          value={textFieldContent}
+          error={error}
+          onChange={onTextFieldChange}
+          onKeyPress={onEnterKeyPress}
+        />
+        <IconButton disabled={disabled} onClick={addItem}>
+          <AddBox />
+        </IconButton>
+      </AddItemFormWrapper>
     );
-});
-
+  },
+);

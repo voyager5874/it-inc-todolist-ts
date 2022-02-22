@@ -5,9 +5,9 @@ import {
     changeListNameAC,
     listsActionsReducer,
     removeListAC, setListsAC, setListStatusAC, TasksFilterType, TodoListInAppType,
-} from "../state/listsActionsReducer";
-import {TodoListOnServerType} from "../api/it-inc-api";
-import {EntityStatusType} from "../state/appReducer";
+} from "../state/reducers/listsActionsReducer";
+import {TodoListOnServerType} from "../api/appDataAPI";
+import {EntityStatusType} from "../state/reducers/appReducer";
 
 
 let startState: TodoListInAppType[] = [];

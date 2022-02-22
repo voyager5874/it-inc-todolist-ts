@@ -1,8 +1,8 @@
-import {tasksActionsReducer} from "./tasksActionsReducer";
-import {listsActionsReducer} from "./listsActionsReducer";
+import {tasksActionsReducer} from "./reducers/tasksActionsReducer";
+import {listsActionsReducer} from "./reducers/listsActionsReducer";
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import thunk from "redux-thunk";
-import {appReducer} from "./appReducer";
+import {appReducer} from "./reducers/appReducer";
 import {TypedUseSelectorHook, useSelector} from "react-redux";
 import {loginReducer} from "./reducers/loginReducer";
 

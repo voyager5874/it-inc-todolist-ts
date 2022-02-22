@@ -1,7 +1,7 @@
-import {addTaskAC, removeTaskAC, setTasksAC, tasksActionsReducer, TasksListType} from "../state/tasksActionsReducer";
+import {addTaskAC, removeTaskAC, setTasksAC, tasksActionsReducer, TasksListType} from "../state/reducers/tasksActionsReducer";
 import {v1} from "uuid";
-import {removeListAC, setListsAC} from "../state/listsActionsReducer";
-import {TaskPriority, TaskStatus} from "../api/it-inc-api";
+import {removeListAC, setListsAC} from "../state/reducers/listsActionsReducer";
+import {TaskPriority, TaskStatus} from "../api/appDataAPI";
 
 let startState: TasksListType = {};
 let listID1: string = v1();
