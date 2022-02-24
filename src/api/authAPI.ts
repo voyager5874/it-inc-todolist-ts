@@ -1,14 +1,17 @@
 import { axiosInstance } from './config';
-import { BaseResponseType, LoginDataType } from './types';
+import { AuthMeResponseDataType, BaseResponseType, LoginRequestDataType } from './types';
 
 export const authAPI = {
-  login(authData: LoginDataType) {
+  login(authData: LoginRequestDataType) {
     return axiosInstance.post<BaseResponseType<{ userId?: number }>>(
       'auth/login',
       authData,
     );
   },
+  logout() {
+    return axiosInstance.delete<BaseResponseType>('auth/login');
+  },
   authMe() {
-    return axiosInstance.get<BaseResponseType>('auth/me');
+    return axiosInstance.get<BaseResponseType<AuthMeResponseDataType>>('auth/me');
   },
 };

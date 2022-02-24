@@ -10,25 +10,26 @@ import Delete from '@material-ui/icons/Delete';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { TaskStatus, TaskType } from '../api/types';
-import { EntityStatusType } from '../state/reducers/appReducer';
+import { AddItemForm } from './AddItemForm';
+import { EditableSpan } from './EditableSpan';
+import { Task } from './Task';
+
+import { TaskStatus } from 'api/types';
+import { EntityStatusType } from 'state/actions/types';
 import {
   changeFilterAC,
   changeListNameTC,
   removeListTC,
   TasksFilterType,
-} from '../state/reducers/listsActionsReducer';
-import { useAppSelector } from '../state/store';
+} from 'state/reducers/listsActionsReducer';
 import {
   addTaskTC,
   fetchTasksTC,
   removeTaskTC,
   updateTaskTC,
-} from '../state/reducers/tasksActionsReducer';
-
-import { AddItemForm } from './AddItemForm';
-import { EditableSpan } from './EditableSpan';
-import { Task } from './Task';
+} from 'state/reducers/tasksActionsReducer';
+import { selectTodoListTasks } from 'state/selectors';
+import { RootStateType } from 'state/store';
 
 type TodolistPropsType = {
   demo?: boolean;
@@ -53,9 +54,10 @@ export const Todolist = memo(
     // console.log(`todolist was called, title: ${props.title}`);
 
     // const listStatus = useSelector<RootStateType, EntityStatusType>(state => state.lists.)
-    const tasks = useAppSelector<TaskType[]>(state => state.tasks[props.todolistID]);
-    // const allTasks = useSelector(getTasks);
-    // const tasks = allTasks[props.todolistID];
+    // const tasks = useAppSelector<TaskType[]>(state => state.tasks[props.todolistID]);
+    const tasks = useSelector((state: RootStateType) =>
+      selectTodoListTasks(state, props.todolistID),
+    );
 
     const dispatch = useDispatch();
 

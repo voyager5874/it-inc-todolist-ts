@@ -2,7 +2,7 @@ import React, { memo, useCallback, useState } from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
-import { ComponentReturnType } from '../types/ComponentReturnType';
+import { ComponentReturnType } from 'types/ComponentReturnType';
 
 type EditableSpanPropsType = {
   disabled?: boolean;

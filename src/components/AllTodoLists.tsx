@@ -1,14 +1,21 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { useDispatch } from 'react-redux';
-
-import { addListTC, TodoListInAppType } from '../state/reducers/listsActionsReducer';
-import { useAppSelector } from '../state/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
 import { AddItemForm } from './AddItemForm';
 import { Todolist } from './Todolist';
+
+import { Login } from 'components/Login';
+import {
+  addListTC,
+  fetchListsTC,
+  TodoListInAppType,
+} from 'state/reducers/listsActionsReducer';
+import { getAuthState } from 'state/selectors';
+import { useAppSelector } from 'state/store';
 
 type AllTodoListsPropsType = {
   demo?: boolean;
@@ -17,8 +24,14 @@ type AllTodoListsPropsType = {
 export const AllTodoLists = memo(({ demo = false }: AllTodoListsPropsType) => {
   // const todolists = useSelector<RootStateType, TodoListInAppType[]>(state => state.lists);
   const todolists = useAppSelector<TodoListInAppType[]>(state => state.lists);
+  const userIsLoggedIn = useSelector(getAuthState);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (demo || !userIsLoggedIn) return;
+    dispatch(fetchListsTC());
+  }, []);
 
   const addTodolist = useCallback(
     (listName: string) => {
@@ -28,6 +41,9 @@ export const AllTodoLists = memo(({ demo = false }: AllTodoListsPropsType) => {
     },
     [dispatch],
   );
+  if (!userIsLoggedIn) {
+    return <Navigate replace to="/login" />;
+  }
 
   return (
     <>

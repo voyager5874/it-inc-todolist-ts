@@ -1,7 +1,7 @@
 import { axiosInstance } from './config';
 import {
   BaseResponseType,
-  GetTasksResponseType,
+  GetTasksResponseDataType,
   taskPutRequestBodyType,
   TaskType,
   TodoListOnServerType,
@@ -32,7 +32,7 @@ export const appDataAPI = {
     );
   },
   getTasks(todolistID: string) {
-    return axiosInstance.get<GetTasksResponseType>(`todo-lists/${todolistID}/tasks`);
+    return axiosInstance.get<GetTasksResponseDataType>(`todo-lists/${todolistID}/tasks`);
   },
   updateTask(todolistID: string, taskID: string, requestPayload: taskPutRequestBodyType) {
     return axiosInstance.put<BaseResponseType<{ item: TaskType }>>(

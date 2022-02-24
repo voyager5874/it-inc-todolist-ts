@@ -1,3 +1,5 @@
+import {Nullable} from "types/Nullable";
+
 export enum TaskStatus {
   New,
   InProgress,
@@ -33,10 +35,16 @@ export type BaseResponseType<T = {}> = {
   data: T;
 };
 
-export type GetTasksResponseType = {
-  error: null | string;
+export type GetTasksResponseDataType = {
+  error: Nullable<string>;
   items: Array<TaskType>;
   totalCount: number;
+};
+
+export type AuthMeResponseDataType = {
+  id: number;
+  email: string;
+  login: string;
 };
 
 export type taskPutRequestBodyType = {
@@ -61,7 +69,7 @@ export type TaskType = {
   addedDate: string;
 };
 
-export type LoginDataType = {
+export type LoginRequestDataType = {
   email: string;
   password: string;
   rememberMe: boolean;

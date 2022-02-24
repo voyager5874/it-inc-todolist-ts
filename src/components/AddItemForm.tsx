@@ -4,7 +4,7 @@ import { IconButton, TextField } from '@material-ui/core';
 import { AddBox } from '@material-ui/icons';
 import styled from 'styled-components';
 
-import { ComponentReturnType } from '../types/ComponentReturnType';
+import { ComponentReturnType } from 'types/ComponentReturnType';
 
 type addItemFormPropsType = {
   addItemCallback: (itemName: string) => void;

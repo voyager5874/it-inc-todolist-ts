@@ -1,19 +1,20 @@
 import { Dispatch } from 'redux';
 
-import { appDataAPI } from '../../api/appDataAPI';
-import { ServerResultCodes, taskPutRequestBodyType, TaskType } from '../../api/types';
-import {
-  handleReject,
-  handleResolveWithServerErrorMessage,
-} from '../../utils/backendErrorHandler';
+import { RootStateType } from '../store';
 
-import { setAppErrorAC, setAppStatusAC } from './appReducer';
 import {
   AddListActionType,
   RemoveListActionType,
   setListsActionType,
 } from './listsActionsReducer';
-import { RootStateType } from '../store';
+
+import { appDataAPI } from 'api';
+import { ServerResultCodes, taskPutRequestBodyType, TaskType } from 'api/types';
+import { setAppErrorAC, setAppStatusAC } from 'state/actions/app';
+import {
+  handleReject,
+  handleResolveWithServerErrorMessage,
+} from 'utils/handleBackendResponseErrors';
 
 const initialState: TasksListType = {};
 

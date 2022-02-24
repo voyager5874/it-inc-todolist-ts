@@ -1,13 +1,13 @@
 import { Dispatch } from 'redux';
 
-import { appDataAPI } from '../../api/appDataAPI';
-import { ServerResultCodes, TodoListOnServerType } from '../../api/types';
+import { appDataAPI } from 'api';
+import { ServerResultCodes, TodoListOnServerType } from 'api/types';
+import { setAppStatusAC } from 'state/actions/app';
+import { AppReducerActionsType, EntityStatusType } from 'state/actions/types';
 import {
   handleReject,
   handleResolveWithServerErrorMessage,
-} from '../../utils/backendErrorHandler';
-
-import { AppReducerActionsType, EntityStatusType, setAppStatusAC } from './appReducer';
+} from 'utils/handleBackendResponseErrors';
 
 export type TasksFilterType = 'all' | 'completed' | 'active';
 

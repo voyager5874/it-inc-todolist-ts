@@ -1,4 +1,4 @@
-import {appReducer, EntityStatusType, IniAppStateType, setAppErrorAC, setAppStatusAC} from "../state/reducers/appReducer";
+import {appReducer, EntityStatusType, AppStateType, setAppErrorAC, setAppStatusAC} from "../state/reducers/appReducer";
 
 
 let startState: IniAppStateType;

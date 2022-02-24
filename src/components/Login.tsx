@@ -12,20 +12,27 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-import { authTC } from '../state/reducers/loginReducer';
-import { useAppSelector } from '../state/store';
+import { loginTC } from 'state/middlewares/login';
+import { getAuthState } from 'state/selectors';
+import { useAppSelector } from 'state/store';
+import { ComponentReturnType } from 'types/ComponentReturnType';
 
-export const Login = () => {
+export const Login = (): ComponentReturnType => {
+  const userIsLoggedIn = useAppSelector(getAuthState);
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
+
+  const MIN_PASSWORD_LENGTH = 4;
 
   const formik = useFormik({
     validate: values => {
       if (!values.email) {
         return { email: 'email required' };
+      }
+      if (values.password.length < MIN_PASSWORD_LENGTH) {
+        return { password: 'password is too short' };
       }
       if (!values.password) {
         return { password: 'password required' };
@@ -37,17 +44,17 @@ export const Login = () => {
       rememberMe: false,
     },
     onSubmit: values => {
-      dispatch(authTC(values));
+      dispatch(loginTC(values));
     },
   });
 
-  // if(isLoggedIn){
-  //     navigate("/")
-  // }
+  if (userIsLoggedIn) {
+    return <Navigate replace to="/" />;
+  }
 
   return (
     <Grid container justify="center">
-      <Grid item xs={4}>
+      <Grid item xs={2}>
         <form onSubmit={formik.handleSubmit}>
           <FormControl>
             <FormLabel>
