@@ -4,14 +4,14 @@ import thunk from 'redux-thunk';
 
 import { appReducer } from './reducers/appReducer';
 import { listsActionsReducer } from './reducers/listsActionsReducer';
-import { loginReducer } from './reducers/loginReducer';
+import { authReducer } from 'state/reducers/authReducer';
 import { tasksActionsReducer } from './reducers/tasksActionsReducer';
 
 const rootReducer = combineReducers({
   tasks: tasksActionsReducer,
   lists: listsActionsReducer,
   app: appReducer,
-  auth: loginReducer,
+  auth: authReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

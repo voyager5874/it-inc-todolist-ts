@@ -8,12 +8,8 @@ import { Navigate } from 'react-router-dom';
 import { AddItemForm } from './AddItemForm';
 import { Todolist } from './Todolist';
 
-import { Login } from 'components/Login';
-import {
-  addListTC,
-  fetchListsTC,
-  TodoListInAppType,
-} from 'state/reducers/listsActionsReducer';
+import { TodoListInAppType } from 'state/actions/types';
+import { addListTC, fetchListsTC } from 'state/middlewares/lists';
 import { getAuthState } from 'state/selectors';
 import { useAppSelector } from 'state/store';
 

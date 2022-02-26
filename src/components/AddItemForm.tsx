@@ -5,6 +5,7 @@ import { AddBox } from '@material-ui/icons';
 import styled from 'styled-components';
 
 import { ComponentReturnType } from 'types/ComponentReturnType';
+import { getCleanString } from 'utils';
 
 type addItemFormPropsType = {
   addItemCallback: (itemName: string) => void;
@@ -24,16 +25,17 @@ export const AddItemForm = memo(
     const [textFieldContent, setTextFieldContent] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
 
-    const onTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
       if (error) {
         setError(false);
       }
-      setTextFieldContent(event.currentTarget.value.trim());
+      setTextFieldContent(event.currentTarget.value);
     };
 
     const addItem = (): void => {
-      if (textFieldContent) {
-        props.addItemCallback(textFieldContent);
+      const title = getCleanString(textFieldContent);
+      if (title) {
+        props.addItemCallback(title);
       } else {
         setError(true);
       }

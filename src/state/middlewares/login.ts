@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { authAPI } from 'api';
 import { LoginRequestDataType, ServerResultCodes } from 'api/types';
 import { setAppStatusAC } from 'state/actions/app';
-import { setAuthStateAC } from 'state/reducers/loginReducer';
+import { setAuthStateAC } from 'state/reducers/authReducer';
 import { handleReject, handleResolveWithServerErrorMessage } from 'utils';
 
 export const loginTC = (authData: LoginRequestDataType) => (dispatch: Dispatch) => {

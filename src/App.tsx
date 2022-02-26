@@ -10,11 +10,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Menu } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 
 import { AllTodoLists } from 'components/AllTodoLists';
 import { ErrorSnackbar } from 'components/ErrorSnackbar';
 import { Login } from 'components/Login';
+import { Page404 } from 'components/Page404';
 import { initializeAppTC } from 'state/middlewares/app';
 import { logoutTC } from 'state/middlewares/login';
 import { getAppInitializationState, getAppStatus, getAuthState } from 'state/selectors';
@@ -30,6 +31,7 @@ export const App = ({ demo = false }: AppPropsType): ComponentReturnType => {
   const appIsInitialized = useSelector(getAppInitializationState);
   const userIsLoggedIn = useSelector(getAuthState);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export const App = ({ demo = false }: AppPropsType): ComponentReturnType => {
 
   const handleLogout = (): void => {
     dispatch(logoutTC());
+    navigate('/login');
   };
 
   const showProgressBar = appStatus === 'loading';
@@ -54,13 +57,19 @@ export const App = ({ demo = false }: AppPropsType): ComponentReturnType => {
     <div>
       <ErrorSnackbar />
       <AppBar position="static">
-        <Toolbar style={{ justifyContent: 'space-between' }}>
+        {/* <Toolbar style={{ justifyContent: 'space-between' }}> */}
+        <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu">
             <Menu />
           </IconButton>
-          <Typography variant="h6">Todolists</Typography>
+          <Typography variant="h6">Todolist</Typography>
           {userIsLoggedIn && (
-            <Button color="inherit" variant="outlined" onClick={handleLogout}>
+            <Button
+              color="inherit"
+              variant="outlined"
+              onClick={handleLogout}
+              style={{ marginLeft: '50px' }}
+            >
               Log out
             </Button>
           )}
@@ -69,8 +78,11 @@ export const App = ({ demo = false }: AppPropsType): ComponentReturnType => {
       </AppBar>
       <Container fixed>
         <Routes>
+          <Route path="/it-inc-todolist-ts" element={<AllTodoLists demo={demo} />} />
           <Route path="/" element={<AllTodoLists demo={demo} />} />
           <Route path="/login" element={<Login />} />
+          <Route path="404" element={<Page404 />} />
+          <Route path="*" element={<Navigate to="404" />} />
         </Routes>
       </Container>
     </div>

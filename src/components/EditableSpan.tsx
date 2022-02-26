@@ -3,6 +3,7 @@ import React, { memo, useCallback, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 
 import { ComponentReturnType } from 'types/ComponentReturnType';
+import { getCleanString } from 'utils';
 
 type EditableSpanPropsType = {
   disabled?: boolean;
@@ -29,10 +30,10 @@ export const EditableSpan = memo(
     };
 
     const saveNewName = (): void => {
-      const cleanInputText = textFieldContent.trim();
-      if (cleanInputText) {
+      const title = getCleanString(textFieldContent);
+      if (title) {
         setEditMode(false);
-        props.itemNameChangedCallback(cleanInputText);
+        props.itemNameChangedCallback(title);
         setTextFieldContent(props.itemName);
       } else {
         setTextFieldContent('');

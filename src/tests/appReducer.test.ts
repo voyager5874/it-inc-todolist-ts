@@ -1,23 +1,25 @@
-import {appReducer, EntityStatusType, AppStateType, setAppErrorAC, setAppStatusAC} from "../state/reducers/appReducer";
+import { setAppErrorAC, setAppStatusAC } from 'state/actions/app';
+import { AppStateType, EntityStatusType } from 'state/actions/types';
+import { appReducer } from 'state/reducers/appReducer';
 
-
-let startState: IniAppStateType;
+let startState: AppStateType;
 
 beforeEach(() => {
-    let startState = {
-        status:"idle",
-        error: null,
-    };
+  const startState = {
+    appStatus: 'idle',
+    error: null,
+    isInitialized: false,
+  };
 });
 
 test('proper error should be set', () => {
-    let err: string | null = 'server error, code 500'
-    const endState = appReducer(startState, setAppErrorAC(err))
-    expect(endState.error).toBe(err)
-})
+  const err: string | null = 'server error, code 500';
+  const endState = appReducer(startState, setAppErrorAC(err));
+  expect(endState.error).toBe(err);
+});
 
 test('the status should be set', () => {
-    let status: EntityStatusType = "failed"
-    const endState = appReducer(startState, setAppStatusAC(status))
-    expect(endState.status).toBe(status)
-})
+  const status: EntityStatusType = 'failed';
+  const endState = appReducer(startState, setAppStatusAC(status));
+  expect(endState.appStatus).toBe(status);
+});

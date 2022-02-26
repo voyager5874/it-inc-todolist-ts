@@ -15,21 +15,18 @@ import { EditableSpan } from './EditableSpan';
 import { Task } from './Task';
 
 import { TaskStatus } from 'api/types';
-import { EntityStatusType } from 'state/actions/types';
-import {
-  changeFilterAC,
-  changeListNameTC,
-  removeListTC,
-  TasksFilterType,
-} from 'state/reducers/listsActionsReducer';
+import { EntityStatusType, TasksFilterType } from 'state/actions/types';
+import { changeListNameTC, removeListTC } from 'state/middlewares/lists';
+import { changeFilterAC } from 'state/reducers/listsActionsReducer';
+import {} from 'state/reducers/tasksActionsReducer';
+import { selectTodoListTasks } from 'state/selectors';
+import { RootStateType } from 'state/store';
 import {
   addTaskTC,
   fetchTasksTC,
   removeTaskTC,
   updateTaskTC,
-} from 'state/reducers/tasksActionsReducer';
-import { selectTodoListTasks } from 'state/selectors';
-import { RootStateType } from 'state/store';
+} from 'state/middlewares/tasks';
 
 type TodolistPropsType = {
   demo?: boolean;
@@ -131,7 +128,7 @@ export const Todolist = memo(
         </h3>
         <AddItemForm disabled={listStatus === 'loading'} addItemCallback={addTask} />
         <List disablePadding>
-          {(filteredTasks || []).map(task => (
+          {filteredTasks.map(task => (
             <ListItem
               disableGutters
               key={task.id}

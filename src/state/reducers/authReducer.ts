@@ -1,3 +1,5 @@
+import { LoginActionType } from 'state/actions/types';
+
 type LoginStateType = {
   isLoggedIn: boolean;
 };
@@ -5,19 +7,20 @@ type LoginStateType = {
 const iniState: LoginStateType = {
   isLoggedIn: false,
 };
-export const loginReducer = (state = iniState, action: ActionType): LoginStateType => {
+export const authReducer = (
+  state = iniState,
+  action: LoginActionType,
+): LoginStateType => {
   switch (action.type) {
-    case 'loginReducer/SET-AUTH-STATE':
+    case 'login/SET-AUTH-STATE':
       return { ...state, isLoggedIn: action.isLoggedIn };
     default:
       return state;
   }
 };
 
-type ActionType = ReturnType<typeof setAuthStateAC>;
-
 export const setAuthStateAC = (newAuthState: boolean) =>
   ({
-    type: 'loginReducer/SET-AUTH-STATE',
+    type: 'login/SET-AUTH-STATE',
     isLoggedIn: newAuthState,
   } as const);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Checkbox,
@@ -20,14 +20,14 @@ import { useAppSelector } from 'state/store';
 import { ComponentReturnType } from 'types/ComponentReturnType';
 
 export const Login = (): ComponentReturnType => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const userIsLoggedIn = useAppSelector(getAuthState);
-
   const dispatch = useDispatch();
 
   const MIN_PASSWORD_LENGTH = 4;
 
   const formik = useFormik({
-    validate: values => {
+    validate: (values) => {
       if (!values.email) {
         return { email: 'email required' };
       }
@@ -42,11 +42,16 @@ export const Login = (): ComponentReturnType => {
       email: 'free@samuraijs.com',
       password: 'free',
       rememberMe: false,
+      // showPassword: false,
     },
     onSubmit: values => {
       dispatch(loginTC(values));
     },
   });
+
+  const handlePasswordVisibilityChange = (): void => {
+    setShowPassword(!showPassword);
+  };
 
   if (userIsLoggedIn) {
     return <Navigate replace to="/" />;
@@ -54,10 +59,12 @@ export const Login = (): ComponentReturnType => {
 
   return (
     <Grid container justify="center">
-      <Grid item xs={2}>
+      <Grid item xs={4}>
         <form onSubmit={formik.handleSubmit}>
           <FormControl>
-            <FormLabel>
+            <FormLabel
+              style={{ marginTop: '20vh', minWidth: '300px', textAlign: 'center' }}
+            >
               <p>
                 sign up on <a href="https://social-network.samuraijs.com/">samuraiJS</a>
               </p>
@@ -66,29 +73,47 @@ export const Login = (): ComponentReturnType => {
             <FormGroup>
               <TextField
                 label="Email"
+                name="email"
                 margin="normal"
                 type="email"
-                {...formik.getFieldProps('email')}
-                error={Boolean(formik.errors.email)}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.errors.email}
               />
               <TextField
                 label="Password"
+                name="password"
                 margin="normal"
-                type={formik.values.password ? 'password' : ''}
-                {...formik.getFieldProps('password')}
-                error={Boolean(formik.errors.password)}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                type={showPassword ? '' : 'password'}
+                error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.errors.password}
               />
+
               <FormControlLabel
                 control={
                   <Checkbox
-                    {...formik.getFieldProps('rememberMe')}
+                    name="rememberMe"
+                    onChange={formik.handleChange}
                     checked={formik.values.rememberMe}
                   />
                 }
                 label="remember me"
               />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showPassword}
+                    onChange={handlePasswordVisibilityChange}
+                  />
+                }
+                label="show password"
+              />
+
               <Button
                 type="submit"
                 variant="contained"
